@@ -432,24 +432,35 @@ npm test
 
 ```
 anysite-mcp-server/
-├── src/
+├── src/                      # Source code
 │   ├── index.ts              # MCP server entry point
 │   ├── server.ts             # Server implementation
 │   └── types.ts              # TypeScript type definitions
 ├── build/                    # Compiled JavaScript
-│   ├── index.js
-│   ├── server.js
-│   ├── types.js
-│   ├── remote-server.js
-│   ├── streamable-server.js
-│   └── smithery.js
-├── .claude/                  # Claude settings
-├── .smithery/                # Smithery integration
-├── package.json
-├── tsconfig.json
-├── README.md
-├── CLAUDE.md
-└── LICENSE.md
+│   ├── index.js              # Main entry point
+│   ├── server.js             # Server executable
+│   ├── types.js              # Type definitions
+│   ├── remote-server.js      # Remote server support
+│   ├── streamable-server.js  # Streaming support
+│   └── smithery.js           # Smithery integration
+├── .claude/                  # Claude Code settings
+│   └── settings.local.json
+├── .cursor/                  # Cursor IDE settings
+│   └── rules/
+├── .smithery/                # Smithery CLI files
+│   └── index.cjs
+├── package.json              # npm package configuration
+├── package-lock.json
+├── tsconfig.json             # TypeScript configuration
+├── smithery.yaml             # Smithery config
+├── glama.json                # Glama integration
+├── .env                      # Environment variables (local)
+├── .npmrc                    # npm configuration
+├── .gitignore
+├── README.md                 # Documentation
+├── CLAUDE.md                 # Claude Code instructions
+├── LICENSE.md                # MIT License
+└── LICENSE
 ```
 
 ### Contributing
