@@ -232,12 +232,6 @@ sorted by top engagement
 - [API Reference](https://docs.anysite.io/api-reference)
 - [All Available Tools](https://docs.anysite.io/mcp-server/tools)
 
-### 🎓 Guides
-- [Getting Started with MCP](https://docs.anysite.io/mcp-server/getting-started)
-- [OAuth vs Local Setup](https://docs.anysite.io/mcp-server/oauth-vs-local)
-- [Best Practices](https://docs.anysite.io/mcp-server/best-practices)
-- [Rate Limits & Quotas](https://docs.anysite.io/mcp-server/rate-limits)
-
 ### 🔧 Tool Categories
 
 <details>
@@ -333,7 +327,7 @@ AnySite MCP Server works with any MCP-compatible client:
 - ✅ **Any MCP Client** - Standard protocol
 
 ### Development Tools
-- 🔧 **n8n** - [AnySite n8n nodes](https://www.npmjs.com/package/@horizondatawave/n8n-nodes-hdw-anysite)
+- 🔧 **n8n** - [AnySite n8n nodes](https://github.com/anysiteio/n8n-nodes-anysite)
 - 🔧 **LangChain** - Custom tool integration
 - 🔧 **AutoGen** - Agent tool registration
 - 🔧 **REST API** - Direct API access
@@ -412,57 +406,6 @@ LinkedIn  Instagram  Reddit  Twitter  Any Website
 
 ---
 
-## ⚙️ Advanced Configuration
-
-### Custom Tool Permissions
-
-Control which tools your agent can access:
-
-```json
-{
-  "mcpServers": {
-    "anysite": {
-      "command": "npx",
-      "args": ["-y", "@anysite/mcp"],
-      "env": {
-        "ANYSITE_ACCESS_TOKEN": "your_token",
-        "ANYSITE_ACCOUNT_ID": "your_account_id"
-      },
-      "disabled_tools": [
-        "send_linkedin_chat_message",
-        "send_linkedin_connection"
-      ]
-    }
-  }
-}
-```
-
-### Rate Limiting
-
-Adjust request timeout and retry behavior:
-
-```env
-# Default timeout per request (seconds)
-ANYSITE_DEFAULT_TIMEOUT=300
-
-# Max timeout (seconds)
-ANYSITE_MAX_TIMEOUT=1500
-
-# Enable auto-retry on rate limits
-ANYSITE_AUTO_RETRY=true
-```
-
-### Proxy Configuration
-
-For high-volume scraping (Enterprise plans):
-
-```env
-ANYSITE_PROXY_ENABLED=true
-ANYSITE_PROXY_ROTATION=true
-```
-
----
-
 ## 🛠️ Development
 
 ### Building from Source
@@ -491,17 +434,22 @@ npm test
 anysite-mcp-server/
 ├── src/
 │   ├── index.ts              # MCP server entry point
-│   ├── tools/                # Tool definitions
-│   │   ├── linkedin/
-│   │   ├── instagram/
-│   │   ├── reddit/
-│   │   ├── twitter/
-│   │   └── web/
-│   ├── api/                  # AnySite API client
-│   └── utils/                # Helpers
+│   ├── server.ts             # Server implementation
+│   └── types.ts              # TypeScript type definitions
 ├── build/                    # Compiled JavaScript
+│   ├── index.js
+│   ├── server.js
+│   ├── types.js
+│   ├── remote-server.js
+│   ├── streamable-server.js
+│   └── smithery.js
+├── .claude/                  # Claude settings
+├── .smithery/                # Smithery integration
 ├── package.json
-└── tsconfig.json
+├── tsconfig.json
+├── README.md
+├── CLAUDE.md
+└── LICENSE.md
 ```
 
 ### Contributing
