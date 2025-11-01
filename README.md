@@ -1,357 +1,558 @@
-# AnySite MCP Server
-[![smithery badge](https://smithery.ai/badge/@anysite/mcp)](https://smithery.ai/server/@anysite/mcp)
+<div align="center">
 
-A comprehensive Model Context Protocol (MCP) server providing access to **57 tools** across multiple social media platforms and web services through the AnySite API. This server enables data retrieval, account management, and content extraction from LinkedIn, Instagram, Twitter/X, Reddit, and any website.
+# 🌐 AnySite MCP Server
 
----
+**Agent-First Web Scraping Infrastructure via Model Context Protocol**
 
-## Platform Coverage
+Connect your AI agents to real-time data from LinkedIn, Instagram, Reddit, Twitter, and any website through a single MCP server.
 
-### LinkedIn (26 tools)
-- **Search & Discovery:** User search, Sales Navigator advanced search, email lookup, company search
-- **Profile Data:** Complete profiles, posts, reactions, comments, connections, endorsers, certificates
-- **Company Data:** Company profiles, employees, posts
-- **Management:** Account profile, chat messages, connection requests, post creation & commenting
+[![npm version](https://img.shields.io/npm/v/@anysite/mcp.svg)](https://www.npmjs.com/package/@anysite/mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/anysiteio/anysite-mcp-server)](https://github.com/anysiteio/anysite-mcp-server/stargazers)
+[![Documentation](https://img.shields.io/badge/docs-anysite.io-blue)](https://docs.anysite.io/mcp-server)
 
-### Instagram (8 tools)
-- **User Data:** Profiles, posts, reels, followers/following
-- **Content:** Post details, likes, comments, search posts
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](https://docs.anysite.io/mcp-server) • [🎮 Playground](https://app.anysite.io) • [💬 Discord](#) • [🐦 Twitter](#)
 
-### Twitter/X (5 tools)
-- **User Data:** Profiles, user search
-- **Content:** Posts, post search with advanced filters, tweet details
-
-### Reddit (3 tools)
-- **Search:** Post search with filters
-- **Content:** Post details, comments
-
-### Web Parser (2 tools)
-- **Extraction:** Parse any webpage with flexible filtering, extract contacts/links
-- **Discovery:** Fetch website sitemaps
-
-### Other (3 tools)
-- **Google Search:** Web search functionality
-- **ChatGPT Deep Research:** Optimized search and fetch tools for ChatGPT
+</div>
 
 ---
 
-## Key Features
+## 🎯 What is AnySite MCP Server?
 
-- **Comprehensive LinkedIn Integration:** 26 tools covering search, profiles, posts, companies, and account management
-- **Multi-Platform Support:** Extract data from LinkedIn, Instagram, Twitter, Reddit, and any website
-- **Advanced Filtering:** Sales Navigator search, post search with 15+ parameters, flexible web parsing
-- **Account Management:** LinkedIn chat, connections, posting (requires ACCOUNT_ID)
-- **Web Scraping:** Parse any webpage with CSS selectors, extract contacts, social links
-- **Flexible Authentication:** API key-based authentication with optional account management
+AnySite MCP Server is a **Model Context Protocol (MCP)** implementation that gives AI agents direct access to web data through platform-specific APIs. Unlike traditional web scrapers, AnySite provides:
 
----
+- **🔒 OAuth Authentication** - Secure, one-click connection for Claude Desktop and other MCP clients
+- **🌐 Multi-Platform Support** - LinkedIn, Instagram, Reddit, Twitter, and custom web parsing
+- **🤖 Agent-First Design** - Built specifically for AI agents with structured data formats
+- **🔄 Self-Healing APIs** - Auto-recovery from platform changes and rate limits
+- **⚡ Real-Time Data** - Fresh data extraction without stale caches
 
-## Tools
-
-AnySite MCP Server exposes several tools through the MCP protocol. Each tool is defined with its name, description, and input parameters:
-
-1. **Search LinkedIn Users**  
-   **Name:** `search_linkedin_users`  
-   **Description:** Search for LinkedIn users with various filters.  
-   **Parameters:**  
-   - `keywords` (optional): Any keyword for search.  
-   - `first_name`, `last_name`, `title`, `company_keywords`, `school_keywords` (optional).  
-   - `current_company`, `past_company`, `location`, `industry`, `education` (optional).  
-   - `count` (optional, default: 10): Maximum number of results (max 1000).  
-   - `timeout` (optional, default: 300): Timeout in seconds (20–1500).
-
-2. **Get LinkedIn Profile**  
-   **Name:** `get_linkedin_profile`  
-   **Description:** Retrieve detailed profile information about a LinkedIn user.  
-   **Parameters:**  
-   - `user` (required): User alias, URL, or URN.  
-   - `with_experience`, `with_education`, `with_skills` (optional, default: true).
-
-3. **Get LinkedIn Email User**  
-   **Name:** `get_linkedin_email_user`  
-   **Description:** Look up LinkedIn user details by email.  
-   **Parameters:**  
-   - `email` (required): Email address.  
-   - `count` (optional, default: 5).  
-   - `timeout` (optional, default: 300).
-
-4. **Get LinkedIn User Posts**  
-   **Name:** `get_linkedin_user_posts`  
-   **Description:** Retrieve posts for a LinkedIn user by URN.  
-   **Parameters:**  
-   - `urn` (required): User URN (must include prefix, e.g. `fsd_profile:...`).  
-   - `count` (optional, default: 10).  
-   - `timeout` (optional, default: 300).
-
-5. **Get LinkedIn User Reactions**  
-   **Name:** `get_linkedin_user_reactions`  
-   **Description:** Retrieve reactions for a LinkedIn user by URN.  
-   **Parameters:**  
-   - `urn` (required).  
-   - `count` (optional, default: 10).  
-   - `timeout` (optional, default: 300).
-
-6. **Get LinkedIn User Comments**  
-   **Name:** `get_linkedin_user_comments`  
-   **Description:** Retrieve comments for a LinkedIn user by URN.  
-   **Parameters:**  
-   - `urn` (required): User URN (with prefix).  
-   - `count` (optional, default: 10).  
-   - `timeout` (optional, default: 300).  
-   - `commented_after` (optional): Filter comments created after the specified timestamp.
-
-7. **Get LinkedIn Chat Messages**  
-   **Name:** `get_linkedin_chat_messages`  
-   **Description:** Retrieve top chat messages from the LinkedIn management API.  
-   **Parameters:**  
-   - `user` (required): User URN (with prefix).  
-   - `count` (optional, default: 20).  
-   - `timeout` (optional, default: 300).
-
-8. **Send LinkedIn Chat Message**  
-   **Name:** `send_linkedin_chat_message`  
-   **Description:** Send a chat message using the LinkedIn management API.  
-   **Parameters:**  
-   - `user` (required): Recipient user URN (with prefix).  
-   - `text` (required): Message text.  
-   - `timeout` (optional, default: 300).
-
-9. **Send LinkedIn Connection Request**  
-   **Name:** `send_linkedin_connection`  
-   **Description:** Send a connection invitation to a LinkedIn user.  
-   **Parameters:**  
-   - `user` (required).  
-   - `timeout` (optional, default: 300).
-
-10. **Send LinkedIn Post Comment**  
-   **Name:** `send_linkedin_post_comment`  
-   **Description:** Create a comment on a LinkedIn post or reply.  
-   **Parameters:**  
-   - `text` (required): Comment text.  
-   - `urn` (required): Activity or comment URN.  
-   - `timeout` (optional, default: 300).
-
-11. **Get LinkedIn User Connections**  
-    **Name:** `get_linkedin_user_connections`  
-    **Description:** Retrieve a list of LinkedIn user connections.  
-    **Parameters:**  
-    - `connected_after` (optional): Timestamp filter.  
-    - `count` (optional, default: 20).  
-    - `timeout` (optional, default: 300).
-
-12. **Get LinkedIn Post Reposts**  
-    **Name:** `get_linkedin_post_reposts`  
-    **Description:** Retrieve reposts for a LinkedIn post.  
-    **Parameters:**  
-    - `urn` (required): Post URN (must start with `activity:`).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
-13. **Get LinkedIn Post Comments**  
-    **Name:** `get_linkedin_post_comments`  
-    **Description:** Retrieve comments for a LinkedIn post.  
-    **Parameters:**  
-    - `urn` (required).  
-    - `sort` (optional, default: `"relevance"`; allowed values: `"relevance"`, `"recent"`).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
-14. **Get LinkedIn Post Reactions**  
-    **Name:** `get_linkedin_post_reactions`  
-    **Description:** Retrieve reactions for a LinkedIn post.  
-    **Parameters:**  
-    - `urn` (required): Post URN (must start with `activity:`).  
-    - `count` (optional, default: 50).  
-    - `timeout` (optional, default: 300).
-
-15. **Get LinkedIn Google Company**  
-    **Name:** `get_linkedin_google_company`  
-    **Description:** Search for LinkedIn companies via Google – the first result is typically the best match.  
-    **Parameters:**  
-    - `keywords` (required): Array of company keywords.  
-    - `with_urn` (optional, default: false).  
-    - `count_per_keyword` (optional, default: 1; range 1–10).  
-    - `timeout` (optional, default: 300).
-
-16. **Get LinkedIn Company**  
-    **Name:** `get_linkedin_company`  
-    **Description:** Retrieve detailed information about a LinkedIn company.  
-    **Parameters:**  
-    - `company` (required): Company alias, URL, or URN.  
-    - `timeout` (optional, default: 300).
-
-17. **Get LinkedIn Company Employees**  
-    **Name:** `get_linkedin_company_employees`  
-    **Description:** Retrieve employees of a LinkedIn company.  
-    **Parameters:**  
-    - `companies` (required): Array of company URNs.  
-    - `keywords`, `first_name`, `last_name` (optional).  
-    - `count` (optional, default: 10).  
-    - `timeout` (optional, default: 300).
-
-18. **Search Reddit Posts**  
-    **Name:** `search_reddit_posts`  
-    **Description:** Search for Reddit posts with various filters.  
-    **Parameters:**  
-    - `query` (required): Main search query.  
-    - `sort` (optional, default: `"relevance"`; allowed values: `"relevance"`, `"hot"`, `"top"`, `"new"`, `"comments"`).  
-    - `time_filter` (optional, default: `"all"`; allowed values: `"all"`, `"year"`, `"month"`, `"week"`, `"day"`, `"hour"`).  
-    - `count` (required): Max result count.  
-    - `timeout` (optional, default: 300).
-
-19. **Get Instagram User**  
-    **Name:** `get_instagram_user`  
-    **Description:** Get Instagram user information by URL, alias or ID.  
-    **Parameters:**  
-    - `user` (required): User ID, alias or URL.  
-    - `timeout` (optional, default: 300): Timeout in seconds (20-1500).
-
-20. **Get Instagram User Posts**  
-    **Name:** `get_instagram_user_posts`  
-    **Description:** Get Instagram user posts.  
-    **Parameters:**  
-    - `user` (required): User ID, alias or URL.  
-    - `count` (required): Max result count.  
-    - `timeout` (optional, default: 300): Timeout in seconds (20-1500).
-
-21. **Get Instagram Post Comments**
-    **Name:** `get_instagram_post_comments`
-    **Description:** Get Instagram post comments.
-    **Parameters:**
-    - `post` (required): Post ID.
-    - `count` (required): Max result count.
-    - `timeout` (optional, default: 300): Timeout in seconds (20-1500).
-
-22. **Get LinkedIn Company Posts**
-    **Name:** `get_linkedin_company_posts`
-    **Description:** Get LinkedIn posts for a company by URN.
-    **Parameters:**
-    - `urn` (required): Company URN (example: company:11130470).
-    - `count` (optional, default: 10): Max posts to return.
-    - `timeout` (optional, default: 300): Timeout in seconds.
+> **Perfect for:** AI research, lead generation, market intelligence, content monitoring, competitive analysis
 
 ---
 
-## Setup Guide
+## ⚡ Key Features
 
-### Installing via Smithery
+### 🎪 Supported Platforms
 
-To install AnySite MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@anysite/mcp):
+| Platform | Search | Profiles | Posts | Comments | DMs | Analytics |
+|----------|--------|----------|-------|----------|-----|-----------|
+| **LinkedIn** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Instagram** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Reddit** | ✅ | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Twitter/X** | ✅ | ✅ | ✅ | ⚠️ | ❌ | ⚠️ |
+| **Any Website** | ✅ | - | - | - | - | - |
 
-```bash
-npx -y @smithery/cli install @anysite/mcp --client claude
+### 🛠️ Core Capabilities
+
+- **Advanced Search & Filtering** - Find people by title, company, location, education, skills
+- **Bulk Data Extraction** - Extract thousands of profiles, posts, or comments in one request
+- **Network Analysis** - Map connections, followers, engagement patterns
+- **Content Monitoring** - Track posts, comments, reactions in real-time
+- **Account Management** - Send messages, connection requests, post comments (LinkedIn)
+- **Smart Web Parsing** - Extract structured data from any website using CSS selectors
+
+### 🔐 Enterprise-Grade Features
+
+- **Rate Limit Management** - Automatic backoff and retry with exponential delays
+- **Proxy Rotation** - Built-in proxy support for high-volume requests
+- **Error Recovery** - Self-healing mechanisms for platform changes
+- **Usage Analytics** - Track API consumption and costs
+- **Team Management** - Multi-user accounts with role-based access
+
+---
+
+## 🚀 Quick Start
+
+### Option 1: Remote MCP with OAuth (Recommended)
+
+Perfect for **Claude Desktop, Cline, Cursor, Windsurf**, and other MCP clients that support OAuth.
+
+#### Step 1: Get Your OAuth URL
+
+1. Sign up at [app.anysite.io](https://app.anysite.io) (100 free credits included)
+2. Navigate to **MCP Server Integration**
+3. Copy your OAuth URL: `https://api.anysite.io/mcp/sse`
+
+#### Step 2: Add to Your MCP Client
+
+<details>
+<summary><b>Claude Desktop</b> (Click to expand)</summary>
+
+1. Open **Claude Desktop** → **Settings** → **Connectors**
+2. Click **Add Custom Connector**
+3. Fill in:
+   - **Name:** AnySite MCP
+   - **OAuth URL:** `https://api.anysite.io/mcp/sse`
+4. Click **Add** → **Connect** → **Allow Access**
+
+📖 [Detailed Claude Desktop Setup Guide](https://docs.anysite.io/mcp-server/claude-desktop-tool/installation)
+
+</details>
+
+<details>
+<summary><b>Cline / Cursor / Windsurf</b></summary>
+
+Add to your MCP configuration file:
+
+```json
+{
+  "mcpServers": {
+    "anysite": {
+      "command": "npx",
+      "args": ["-y", "@anysite/mcp"],
+      "env": {
+        "ANYSITE_OAUTH_URL": "https://api.anysite.io/mcp/sse"
+      }
+    }
+  }
+}
 ```
 
-### 1. Clone the Repository (macOS)
+Configuration file locations:
+- **Cline:** `.cline/mcp_settings.json`
+- **Cursor:** `.cursor/mcp_config.json`
+- **Windsurf:** `.windsurf/mcp_config.json`
 
-Open your terminal and run the following commands:
+</details>
+
+#### Step 3: Verify Connection
+
+Ask your AI agent:
+```
+What MCP tools do you have access to?
+```
+
+Expected response should include:
+- `search_linkedin_users`
+- `get_linkedin_profile`
+- `get_instagram_user`
+- `search_reddit_posts`
+- `google_search`
+- `parse_webpage`
+- ... and **50+ more tools**
+
+---
+
+### Option 2: Local MCP Server (For Development)
+
+Perfect for **testing, development, custom integrations**.
+
+#### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/anysite/anysite-mcp-server.git
-
-# Change directory to the project folder
+git clone https://github.com/anysiteio/anysite-mcp-server.git
 cd anysite-mcp-server
 
 # Install dependencies
 npm install
+
+# Build the project
+npm run build
 ```
-### 2. Obtain Your API Credentials
 
-Register at [app.anysite.io](https://app.anysite.io) to get your API key and 100 free credits. You will receive your **ANYSITE_ACCESS_TOKEN** and **ANYSITE_ACCOUNT_ID**.
+#### Configuration
 
----
-
-### 3. Configure the Environment
-
-Create a `.env` file in the root of your project with the following content:
-
+Create `.env` file:
 ```env
-ANYSITE_ACCESS_TOKEN=YOUR_ANYSITE_ACCESS_TOKEN
-ANYSITE_ACCOUNT_ID=YOUR_ANYSITE_ACCOUNT_ID
+ANYSITE_ACCESS_TOKEN=your_access_token
+ANYSITE_ACCOUNT_ID=your_account_id
 ```
-### 4. Client Configuration
 
-#### 4.1 Claude Desktop
+Get your credentials from [app.anysite.io](https://app.anysite.io/settings/api-keys)
 
-Update your Claude configuration file (`claude_desktop_config.json`) with the following content:
+#### Run Server
+
+```bash
+npm start
+```
+
+#### Connect to MCP Client
+
+Add to your MCP configuration:
 
 ```json
 {
   "mcpServers": {
-    "anysite": {
-      "command": "npx",
-      "args": ["-y","@anysite/mcp"],
+    "anysite-local": {
+      "command": "node",
+      "args": ["/path/to/anysite-mcp-server/build/index.js"],
       "env": {
-        "ANYSITE_ACCESS_TOKEN": "YOUR_ANYSITE_ACCESS_TOKEN",
-        "ANYSITE_ACCOUNT_ID": "YOUR_ANYSITE_ACCOUNT_ID"
+        "ANYSITE_ACCESS_TOKEN": "your_token",
+        "ANYSITE_ACCOUNT_ID": "your_account_id"
       }
     }
   }
 }
 ```
-*Configuration file location:*
-
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ---
 
-#### 4.2 Cursor
+## 🎮 Usage Examples
 
-**Easy way:**
-Open Cursor Settings and add a new MCP server with the command:
+### LinkedIn: Find Decision Makers
 
-```bash
-env ANYSITE_ACCESS_TOKEN=your-access-token ANYSITE_ACCOUNT_ID=your-account-id node /path/to/your/build/index.js
 ```
-**Safe way:**  
-Copy the provided template `run.template.sh` to a new file (e.g. `run.sh`), update it with your credentials, and configure Cursor to run:
-
-```bash
-sh /path/to/your/run.sh
+Find me 10 CTOs at AI companies in San Francisco
 ```
-#### 4.3 Windsurf
 
-Update your Windsurf configuration file (`mcp_config.json`) with the following content:
+The MCP server will:
+1. Search LinkedIn users with title="CTO", company_keywords="AI", location="San Francisco"
+2. Return structured profiles with name, headline, company, location
+3. Provide direct LinkedIn URLs for each profile
 
-```json
-{
-  "mcpServers": {
-    "anysite": {
-      "command": "npx",
-      "args": ["-y","@anysite/mcp"],
-      "env": {
-        "ANYSITE_ACCESS_TOKEN": "YOUR_ANYSITE_ACCESS_TOKEN",
-        "ANYSITE_ACCOUNT_ID": "YOUR_ANYSITE_ACCOUNT_ID"
-      }
-    }
-  }
-}
+### Instagram: Monitor Brand Mentions
+
 ```
-**Note:** After configuration, you can disable official web tools to conserve your API credits.
+Get the latest 20 Instagram posts mentioning @yourbrand
+```
+
+### Reddit: Analyze Discussions
+
+```
+Search Reddit for posts about "LLM agents" in the last week,
+sorted by top engagement
+```
+
+### Multi-Platform Research
+
+```
+1. Find the LinkedIn profile of John Doe at Company X
+2. Get his recent posts and engagement metrics
+3. Find his Twitter profile and latest tweets
+4. Cross-reference with Instagram presence
+```
 
 ---
 
-### MCP Client Example Configuration
+## 📖 Documentation
 
-Below is an example configuration for an MCP client (e.g., a custom integration):
+### 📚 Full Documentation
+- [AnySite MCP Server Docs](https://docs.anysite.io/mcp-server)
+- [API Reference](https://docs.anysite.io/api-reference)
+- [All Available Tools](https://docs.anysite.io/mcp-server/tools)
 
-```json
-{
-  "mcpServers": {
-    "anysite": {
-      "command": "npx",
-      "args": ["-y","@anysite/mcp"],
-      "env": {
-        "ANYSITE_ACCESS_TOKEN": "YOUR_ANYSITE_ACCESS_TOKEN",
-        "ANYSITE_ACCOUNT_ID": "YOUR_ANYSITE_ACCOUNT_ID"
-      }
-    }
-  }
-}
+### 🔧 Tool Categories (57 Total)
+
+<details>
+<summary><b>LinkedIn Tools (26 tools)</b></summary>
+
+**Search & Discovery (7 tools)**
+- `search_linkedin_users` - Advanced user search with 10+ filters
+- `linkedin_sn_search_users` - Sales Navigator advanced search
+- `get_linkedin_email_user` - Find users by email address
+- `get_linkedin_user_email_db` - Batch email lookup (up to 10 profiles)
+- `get_linkedin_google_company` - Find companies via Google search
+- `get_linkedin_company` - Company details lookup
+- `search_linkedin_posts` - Search posts by keywords, author, date
+
+**Profile & Data (7 tools)**
+- `get_linkedin_profile` - Full profile with experience, education, skills
+- `get_linkedin_user_posts` - User's post history
+- `get_linkedin_user_reactions` - Posts user reacted to
+- `get_linkedin_user_comments` - User's comment history
+- `get_linkedin_user_connections` - Network connections
+- `get_linkedin_user_endorsers` - Skill endorsers
+- `get_linkedin_user_certificates` - User certificates
+
+**Company Intelligence (4 tools)**
+- `get_linkedin_company_employees` - Employee list with filters
+- `get_linkedin_company_posts` - Company updates
+- `get_linkedin_post_reposts` - Reshare analysis
+- `get_linkedin_conversations` - Conversation history
+
+**Engagement (4 tools)**
+- `get_linkedin_post_comments` - Comment threads
+- `get_linkedin_post_reactions` - Who reacted and how
+- `get_linkedin_post_reposts` - Reshare analysis
+
+**Account Management (4 tools)** - Requires ACCOUNT_ID
+- `get_linkedin_management_me` - Get own profile
+- `send_linkedin_chat_message` - Send DMs
+- `get_linkedin_chat_messages` - Retrieve conversations
+- `send_linkedin_connection` - Send connection requests
+- `send_linkedin_post_comment` - Comment on posts
+- `send_linkedin_post` - Create posts
+
+</details>
+
+<details>
+<summary><b>Instagram Tools (8 tools)</b></summary>
+
+- `get_instagram_user` - Profile info, followers, posts count
+- `get_instagram_user_posts` - Post history with media
+- `get_instagram_user_reels` - Reels/videos
+- `get_instagram_user_friendships` - Followers/following lists
+- `get_instagram_post` - Post details with metrics
+- `get_instagram_post_comments` - Comment threads
+- `get_instagram_post_likes` - Who liked the post
+- `search_instagram_posts` - Hashtag and keyword search
+
+</details>
+
+<details>
+<summary><b>Twitter/X Tools (5 tools)</b></summary>
+
+- `get_twitter_user` - Profile details
+- `search_twitter_users` - Find users
+- `get_twitter_user_posts` - Tweet history
+- `search_twitter_posts` - Advanced tweet search with 15+ filters
+- `get_twitter_post` - Tweet details
+
+</details>
+
+<details>
+<summary><b>Reddit Tools (3 tools)</b></summary>
+
+- `search_reddit_posts` - Search with sort, time, subreddit filters
+- `get_reddit_post` - Post details with score, comments
+- `get_reddit_post_comments` - Comment trees with nested replies
+
+</details>
+
+<details>
+<summary><b>Web Parsing Tools (2 tools)</b></summary>
+
+- `parse_webpage` - Extract content with 14+ CSS selector options
+- `get_sitemap` - Parse website sitemaps
+
+</details>
+
+<details>
+<summary><b>Other Tools (3 tools)</b></summary>
+
+- `google_search` - Google search with clean results
+- `search` - ChatGPT Deep Research optimized search
+- `fetch` - ChatGPT Deep Research optimized profile fetch
+
+</details>
+
+---
+
+## 🤝 Integrations
+
+AnySite MCP Server works with any MCP-compatible client:
+
+### AI Assistants
+- ✅ **Claude Desktop** - Native OAuth support
+- ✅ **Cline** - MCP configuration
+- ✅ **Cursor** - Custom MCP server
+- ✅ **Windsurf** - MCP integration
+- ✅ **Any MCP Client** - Standard protocol
+
+### Development Tools
+- 🔧 **n8n** - [AnySite n8n nodes](https://github.com/anysiteio/n8n-nodes-anysite)
+- 🔧 **LangChain** - Custom tool integration
+- 🔧 **AutoGen** - Agent tool registration
+- 🔧 **REST API** - Direct API access
+
+### Comparison: Remote vs Local
+
+| Feature | Remote MCP (OAuth) | Local MCP |
+|---------|-------------------|-----------|
+| **Setup Time** | < 2 minutes | ~10 minutes |
+| **Authentication** | OAuth (secure, one-click) | API keys in config |
+| **Updates** | Automatic | Manual git pull |
+| **Best For** | Production, end-users | Development, testing |
+| **Credentials** | Managed by AnySite | Self-managed |
+| **Revocation** | One-click in dashboard | Manual removal |
+| **MCP Clients** | Claude Desktop, Cline, etc. | Any MCP client |
+
+**Recommendation:** Use **Remote MCP** for production and **Local MCP** for development/testing.
+
+---
+
+## 🏗️ Architecture
+
 ```
-Replace the paths and credentials with your own values.
-## License
+┌─────────────────┐
+│   MCP Client    │ (Claude Desktop, Cline, etc.)
+│   (AI Agent)    │
+└────────┬────────┘
+         │ MCP Protocol
+         │
+┌────────▼────────┐
+│  AnySite MCP    │
+│     Server      │
+└────────┬────────┘
+         │ REST API
+         │
+┌────────▼────────┐
+│  AnySite API    │ ← OAuth Authentication
+│   Platform      │ ← Rate Limiting
+└────────┬────────┘ ← Proxy Rotation
+         │
+    ┌────┴────┬────────┬─────────┬──────────┐
+    ▼         ▼        ▼         ▼          ▼
+LinkedIn  Instagram  Reddit  Twitter  Any Website
+```
+
+**Key Components:**
+- **MCP Protocol Layer** - Standardized tool interface for AI agents
+- **API Abstraction** - Platform-specific API adapters with error handling
+- **Authentication** - OAuth 2.0 for secure credential management
+- **Self-Healing** - Auto-retry and fallback mechanisms
+- **Rate Limiting** - Smart backoff to prevent API bans
+
+---
+
+## 💡 Use Cases
+
+### 🎯 Lead Generation & Sales
+- Find decision makers by title, company, location
+- Enrich CRM data with LinkedIn profiles
+- Monitor competitor hiring and expansion
+
+### 📊 Market Intelligence
+- Track brand mentions across platforms
+- Analyze competitor social media strategy
+- Monitor industry trends and discussions
+
+### 🔍 Research & Analytics
+- Collect datasets for AI training
+- Social network analysis
+- Content performance tracking
+
+### 🤖 AI Agent Workflows
+- Multi-platform data correlation
+- Automated outreach campaigns
+- Cross-platform identity resolution
+
+---
+
+## 🛠️ Development
+
+### Building from Source
+
+```bash
+# Clone repository
+git clone https://github.com/anysiteio/anysite-mcp-server.git
+cd anysite-mcp-server
+
+# Install dependencies
+npm install
+
+# Build TypeScript
+npm run build
+
+# Run in development mode
+npm run dev
+
+# Run tests
+npm test
+```
+
+### Project Structure
+
+```
+anysite-mcp-server/
+├── src/                      # Source code
+│   ├── index.ts              # MCP server entry point (Smithery runtime)
+│   ├── server.ts             # Server implementation (Traditional MCP)
+│   └── types.ts              # TypeScript type definitions
+├── build/                    # Compiled JavaScript
+│   ├── index.js              # Main entry point
+│   ├── server.js             # Server executable
+│   ├── types.js              # Type definitions
+│   ├── remote-server.js      # Remote server support
+│   ├── streamable-server.js  # Streaming support
+│   └── smithery.js           # Smithery integration
+├── .claude/                  # Claude Code settings
+│   └── settings.local.json
+├── .cursor/                  # Cursor IDE settings
+│   └── rules/
+├── .smithery/                # Smithery CLI files
+│   └── index.cjs
+├── package.json              # npm package configuration
+├── package-lock.json
+├── tsconfig.json             # TypeScript configuration
+├── smithery.yaml             # Smithery config
+├── glama.json                # Glama integration
+├── .env                      # Environment variables (local)
+├── .npmrc                    # npm configuration
+├── .gitignore
+├── README.md                 # Documentation
+├── CLAUDE.md                 # Claude Code instructions
+├── LICENSE.md                # MIT License
+└── LICENSE
+```
+
+### Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+**Areas we need help with:**
+- 📝 Documentation improvements
+- 🐛 Bug fixes and testing
+- ✨ New platform integrations
+- 🌍 Translations
+
+---
+
+## 📊 Pricing & Limits
+
+### Free Tier
+- ✅ 100 free credits on signup
+- ✅ All 57 tools available
+- ✅ OAuth authentication
+- ⚠️ Rate limits apply
+
+### Pro Plans
+- 🚀 Higher rate limits
+- 🚀 Priority support
+- 🚀 Dedicated proxies
+- 🚀 Team collaboration
+
+See [pricing details](https://anysite.io/pricing)
+
+---
+
+## 🔒 Security & Privacy
+
+- **OAuth 2.0** - Industry-standard authentication
+- **No Credential Storage** - Your API keys stay with AnySite
+- **Encrypted Transport** - All data transmitted over HTTPS
+- **GDPR Compliant** - Data processing follows EU regulations
+- **Revocable Access** - One-click disconnect in dashboard
+
+⚠️ **Important:** Always comply with platform terms of service and local regulations when scraping data.
+
+---
+
+## 💬 Community & Support
+
+- 📖 [Documentation](https://docs.anysite.io)
+- 💬 [Discord Community](#) - Ask questions, share workflows
+- 🐦 [Twitter](https://twitter.com/anysite_io) - Latest updates
+- 📧 [Email Support](mailto:support@anysite.io)
+- 🐛 [GitHub Issues](https://github.com/anysiteio/anysite-mcp-server/issues)
+
+---
+
+## 📄 License
 
 This project is licensed under the [MIT License](LICENSE.md).
+
+---
+
+## 🙏 Acknowledgments
+
+Built with:
+- [Model Context Protocol](https://modelcontextprotocol.io/) by Anthropic
+- [TypeScript](https://www.typescriptlang.org/)
+- [Node.js](https://nodejs.org/)
+
+Special thanks to the MCP community for feedback and contributions.
+
+---
+
+<div align="center">
+
+**⭐ Star us on GitHub if AnySite MCP Server helps your AI agents!**
+
+Made with ❤️ by the [AnySite.io](https://anysite.io) team
+
+[Website](https://anysite.io) • [Documentation](https://docs.anysite.io) • [API Playground](https://app.anysite.io)
+
+</div>
