@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="icon.png" alt="AnySite MCP Server Logo" width="200" />
+
 # 🌐 AnySite MCP Server
 
 **Agent-First Web Scraping Infrastructure via Model Context Protocol**

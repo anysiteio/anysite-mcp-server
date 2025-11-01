@@ -1,2 +1,3 @@
 # Smithery.ai configuration for anysite-mcp-server (TypeScript runtime)
 runtime: "typescript"
+icon: "icon.png"

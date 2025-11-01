@@ -11,7 +11,8 @@
     "mcp": "build/server.js"
   },
   "files": [
-    "build"
+    "build",
+    "icon.png"
   ],
   "scripts": {
     "build": "npx smithery build",
