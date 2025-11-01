@@ -1,32 +1,48 @@
 # AnySite MCP Server
 [![smithery badge](https://smithery.ai/badge/@anysite/mcp)](https://smithery.ai/server/@anysite/mcp)
 
-A Model Context Protocol (MCP) server that provides comprehensive access to LinkedIn and Instagram data and functionalities using the AnySite API, enabling not only data retrieval but also robust management of user accounts.
+A comprehensive Model Context Protocol (MCP) server providing access to **57 tools** across multiple social media platforms and web services through the AnySite API. This server enables data retrieval, account management, and content extraction from LinkedIn, Instagram, Twitter/X, Reddit, and any website.
+
 ---
 
-## Features
+## Platform Coverage
 
-- **LinkedIn Users Search:** Filter and search for LinkedIn users by keywords, name, title, company, location, industry, and education.
-- **Profile Lookup:** Retrieve detailed profile information for a LinkedIn user.
-- **Email Lookup:** Find LinkedIn user details by email address.
-- **Posts & Reactions:** Retrieve a user's posts and associated reactions.
-- **Post Reposts, Comments & Reactions:** Retrieve reposts, comments, and reactions for a specific LinkedIn post.
-- **Account Management:**
-  - **Chat Functionality:** Retrieve and send chat messages via the LinkedIn management API.
-  - **Connection Management:** Send connection invitations to LinkedIn users.
-  - **Post Commenting:** Create comments on LinkedIn posts or replies.
-  - **User Connections:** Retrieve a list of a user's LinkedIn connections.
-- **Company Search & Details:**  
-  - **Google Company Search:** Find LinkedIn companies using Google search – the first result is typically the best match.  
-  - **Company Lookup:** Retrieve detailed information about a LinkedIn company.  
-  - **Company Employees:** Retrieve employees for a given LinkedIn company.
-  
-- **Google Search**
-- **Reddit Search:** Search for Reddit posts with various filters including query, sort options, time filters, and result count.
-- **Instagram Data Access:**
-  - **User Profiles:** Get detailed Instagram user information by URL, alias, or ID.
-  - **User Posts:** Retrieve posts from Instagram users.
-  - **Post Comments:** Get comments for specific Instagram posts.
+### LinkedIn (26 tools)
+- **Search & Discovery:** User search, Sales Navigator advanced search, email lookup, company search
+- **Profile Data:** Complete profiles, posts, reactions, comments, connections, endorsers, certificates
+- **Company Data:** Company profiles, employees, posts
+- **Management:** Account profile, chat messages, connection requests, post creation & commenting
+
+### Instagram (8 tools)
+- **User Data:** Profiles, posts, reels, followers/following
+- **Content:** Post details, likes, comments, search posts
+
+### Twitter/X (5 tools)
+- **User Data:** Profiles, user search
+- **Content:** Posts, post search with advanced filters, tweet details
+
+### Reddit (3 tools)
+- **Search:** Post search with filters
+- **Content:** Post details, comments
+
+### Web Parser (2 tools)
+- **Extraction:** Parse any webpage with flexible filtering, extract contacts/links
+- **Discovery:** Fetch website sitemaps
+
+### Other (3 tools)
+- **Google Search:** Web search functionality
+- **ChatGPT Deep Research:** Optimized search and fetch tools for ChatGPT
+
+---
+
+## Key Features
+
+- **Comprehensive LinkedIn Integration:** 26 tools covering search, profiles, posts, companies, and account management
+- **Multi-Platform Support:** Extract data from LinkedIn, Instagram, Twitter, Reddit, and any website
+- **Advanced Filtering:** Sales Navigator search, post search with 15+ parameters, flexible web parsing
+- **Account Management:** LinkedIn chat, connections, posting (requires ACCOUNT_ID)
+- **Web Scraping:** Parse any webpage with CSS selectors, extract contacts, social links
+- **Flexible Authentication:** API key-based authentication with optional account management
 
 ---
 

@@ -47,7 +47,27 @@ const API_CONFIG = {
     GOOGLE_SEARCH: "/api/google/search",
     INSTAGRAM_USER: "/api/instagram/user",
     INSTAGRAM_USER_POSTS: "/api/instagram/user/posts",
-    INSTAGRAM_POST_COMMENTS: "/api/instagram/post/comments"
+    INSTAGRAM_POST_COMMENTS: "/api/instagram/post/comments",
+    // New LinkedIn endpoints
+    LINKEDIN_USER_ENDORSERS: "/api/linkedin/user/endorsers",
+    LINKEDIN_USER_CERTIFICATES: "/api/linkedin/user/certificates",
+    LINKEDIN_USER_EMAIL_DB: "/api/linkedin/user/email",
+    LINKEDIN_MANAGEMENT_ME: "/api/linkedin/management/me",
+    // New Instagram endpoints
+    INSTAGRAM_POST: "/api/instagram/post",
+    INSTAGRAM_POST_LIKES: "/api/instagram/post/likes",
+    INSTAGRAM_USER_FRIENDSHIPS: "/api/instagram/user/friendships",
+    INSTAGRAM_SEARCH_POSTS: "/api/instagram/search/posts",
+    INSTAGRAM_USER_REELS: "/api/instagram/user/reels",
+    // Twitter/X endpoints
+    TWITTER_USER: "/api/twitter/user",
+    TWITTER_SEARCH_USERS: "/api/twitter/search/users",
+    TWITTER_USER_POSTS: "/api/twitter/user/posts",
+    TWITTER_SEARCH_POSTS: "/api/twitter/search/posts",
+    TWITTER_POST: "/api/twitter/post",
+    // Web Parser endpoints
+    WEBPARSER_PARSE: "/api/webparser/parse",
+    WEBPARSER_SITEMAP: "/api/webparser/sitemap"
   }
 };
 
@@ -1071,7 +1091,444 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
-  log("AnySite MCP Server initialized with 27 tools");
+  // ===== NEW LINKEDIN TOOLS =====
+
+  server.tool(
+    "get_linkedin_user_endorsers",
+    "Get LinkedIn user endorsers by URN",
+    {
+      urn: z.string().describe("User URN (with fsd_profile: prefix)"),
+      count: z.number().default(10).describe("Max endorsers to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, count, timeout }) => {
+      const normalizedUrn = normalizeUserURN(urn);
+      const requestData = { timeout, urn: normalizedUrn, count };
+      log(`Starting LinkedIn user endorsers lookup for: ${normalizedUrn}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_ENDORSERS, requestData);
+        log(`User endorsers lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user endorsers lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user endorsers API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_certificates",
+    "Get LinkedIn user certificates by URN",
+    {
+      urn: z.string().describe("User URN (with fsd_profile: prefix)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedUrn = normalizeUserURN(urn);
+      const requestData = { timeout, urn: normalizedUrn };
+      log(`Starting LinkedIn user certificates lookup for: ${normalizedUrn}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_CERTIFICATES, requestData);
+        log(`User certificates lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user certificates lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user certificates API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_email_db",
+    "Get LinkedIn user email from internal database (max 10 profiles)",
+    {
+      profile: z.string().describe("LinkedIn internal_id, profile URL, alias, or set of them (max 10)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ profile, timeout }) => {
+      const requestData = { timeout, profile };
+      log(`Starting LinkedIn user email DB lookup for: ${profile}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EMAIL_DB, requestData);
+        log(`User email DB lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user email DB lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user email DB API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_management_me",
+    "Get own LinkedIn profile information (requires ACCOUNT_ID)",
+    {
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ timeout }) => {
+      const requestData: any = { timeout };
+      if (ACCOUNT_ID) requestData.account_id = ACCOUNT_ID;
+      log(`Starting LinkedIn management me lookup`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_ME, requestData);
+        log(`Management me lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn management me lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn management me API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== NEW INSTAGRAM TOOLS =====
+
+  server.tool(
+    "get_instagram_post",
+    "Get Instagram post by ID",
+    {
+      post: z.string().describe("Post ID"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ post, timeout }) => {
+      const requestData = { timeout, post };
+      log(`Starting Instagram post lookup for: ${post}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_POST, requestData);
+        log(`Instagram post lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Instagram post lookup error:", error);
+        return { content: [{ type: "text", text: `Instagram post API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_instagram_post_likes",
+    "Get likes from an Instagram post",
+    {
+      post: z.string().describe("Post ID"),
+      count: z.number().describe("Max likes to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ post, count, timeout }) => {
+      const requestData = { timeout, post, count };
+      log(`Starting Instagram post likes lookup for: ${post}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_POST_LIKES, requestData);
+        log(`Instagram post likes lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Instagram post likes lookup error:", error);
+        return { content: [{ type: "text", text: `Instagram post likes API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_instagram_user_friendships",
+    "Get followers or following list from Instagram user",
+    {
+      user: z.string().describe("User ID, alias or URL"),
+      count: z.number().describe("Max results to return"),
+      type: z.enum(["followers", "following"]).describe("Type of relationships to fetch"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ user, count, type, timeout }) => {
+      const requestData = { timeout, user, count, type };
+      log(`Starting Instagram user friendships lookup for: ${user} (${type})`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_USER_FRIENDSHIPS, requestData);
+        log(`Instagram user friendships lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Instagram user friendships lookup error:", error);
+        return { content: [{ type: "text", text: `Instagram user friendships API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_instagram_posts",
+    "Search Instagram posts by query",
+    {
+      query: z.string().describe("Search query"),
+      count: z.number().describe("Max results to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count };
+      log(`Starting Instagram posts search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_SEARCH_POSTS, requestData);
+        log(`Instagram posts search complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Instagram posts search error:", error);
+        return { content: [{ type: "text", text: `Instagram posts search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_instagram_user_reels",
+    "Get reels from an Instagram user profile",
+    {
+      user: z.string().describe("User ID, alias or URL"),
+      count: z.number().describe("Max reels to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ user, count, timeout }) => {
+      const requestData = { timeout, user, count };
+      log(`Starting Instagram user reels lookup for: ${user}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_USER_REELS, requestData);
+        log(`Instagram user reels lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Instagram user reels lookup error:", error);
+        return { content: [{ type: "text", text: `Instagram user reels API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== TWITTER/X TOOLS =====
+
+  server.tool(
+    "get_twitter_user",
+    "Get Twitter/X user profile information",
+    {
+      user: z.string().describe("User Alias or URL"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ user, timeout }) => {
+      const requestData = { timeout, user };
+      log(`Starting Twitter user lookup for: ${user}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_USER, requestData);
+        log(`Twitter user lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Twitter user lookup error:", error);
+        return { content: [{ type: "text", text: `Twitter user API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_twitter_users",
+    "Search Twitter/X users",
+    {
+      count: z.number().describe("Max results to return"),
+      query: z.string().optional().describe("Main search users query"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ count, query, timeout }) => {
+      const requestData: any = { timeout, count };
+      if (query) requestData.query = query;
+      log(`Starting Twitter users search`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_SEARCH_USERS, requestData);
+        log(`Twitter users search complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Twitter users search error:", error);
+        return { content: [{ type: "text", text: `Twitter users search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_twitter_user_posts",
+    "Get posts from a Twitter/X user",
+    {
+      user: z.string().describe("User ID, alias or URL"),
+      count: z.number().describe("Max posts to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ user, count, timeout }) => {
+      const requestData = { timeout, user, count };
+      log(`Starting Twitter user posts lookup for: ${user}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_USER_POSTS, requestData);
+        log(`Twitter user posts lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Twitter user posts lookup error:", error);
+        return { content: [{ type: "text", text: `Twitter user posts API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_twitter_posts",
+    "Search Twitter/X posts with advanced filtering",
+    {
+      count: z.number().describe("Max results to return"),
+      query: z.string().optional().describe("Main search query"),
+      exact_phrase: z.string().optional().describe("Exact phrase (in quotes)"),
+      any_of_these_words: z.string().optional().describe("Any of these words (OR condition)"),
+      none_of_these_words: z.string().optional().describe("None of these words (NOT condition)"),
+      these_hashtags: z.string().optional().describe("These hashtags"),
+      language: z.string().optional().describe("Language of tweets"),
+      from_these_accounts: z.string().optional().describe("From these accounts"),
+      to_these_accounts: z.string().optional().describe("To these accounts"),
+      mentioning_these_accounts: z.string().optional().describe("Mentioning these accounts (username with @)"),
+      min_replies: z.string().optional().describe("Minimum number of replies"),
+      min_likes: z.string().optional().describe("Minimum number of likes"),
+      min_retweets: z.string().optional().describe("Minimum number of retweets"),
+      from_date: z.string().optional().describe("Starting date for tweets search (timestamp)"),
+      to_date: z.string().optional().describe("Ending date for tweets search (timestamp)"),
+      search_type: z.enum(["Top", "Latest", "People", "Photos", "Videos"]).default("Top").describe("Type of search results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ count, timeout, ...optionalParams }) => {
+      const requestData: any = { timeout, count };
+      Object.keys(optionalParams).forEach(key => {
+        if (optionalParams[key as keyof typeof optionalParams] !== undefined) {
+          requestData[key] = optionalParams[key as keyof typeof optionalParams];
+        }
+      });
+      log(`Starting Twitter posts search`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_SEARCH_POSTS, requestData);
+        log(`Twitter posts search complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Twitter posts search error:", error);
+        return { content: [{ type: "text", text: `Twitter posts search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_twitter_post",
+    "Get Twitter/X post details",
+    {
+      post_url: z.string().describe("Twitter post URL"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ post_url, timeout }) => {
+      const requestData = { timeout, post_url };
+      log(`Starting Twitter post lookup for: ${post_url}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_POST, requestData);
+        log(`Twitter post lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Twitter post lookup error:", error);
+        return { content: [{ type: "text", text: `Twitter post API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== WEB PARSER TOOLS =====
+
+  server.tool(
+    "parse_webpage",
+    "Parse and extract content from any webpage with flexible filtering options",
+    {
+      url: z.string().describe("URL of the page to parse"),
+      include_tags: z.array(z.string()).optional().describe("CSS selectors of elements to include"),
+      exclude_tags: z.array(z.string()).optional().describe("CSS selectors or wildcard masks of elements to exclude"),
+      only_main_content: z.boolean().default(false).describe("Extract only main content of the page"),
+      remove_comments: z.boolean().default(true).describe("Remove HTML comments"),
+      resolve_srcset: z.boolean().default(true).describe("Convert image srcset to src"),
+      return_full_html: z.boolean().default(false).describe("Return full HTML document or only body content"),
+      min_text_block: z.number().default(200).describe("Minimum text block size for main content detection"),
+      remove_base64_images: z.boolean().default(true).describe("Remove base64-encoded images"),
+      strip_all_tags: z.boolean().default(false).describe("Remove all HTML tags and return plain text only"),
+      extract_contacts: z.boolean().default(false).describe("Extract links, emails, and phone numbers"),
+      same_origin_links: z.boolean().default(false).describe("Only extract links from the same domain"),
+      social_links_only: z.boolean().default(false).describe("Only extract social media links"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ url, timeout, ...optionalParams }) => {
+      const requestData: any = { timeout, url };
+      Object.keys(optionalParams).forEach(key => {
+        if (optionalParams[key as keyof typeof optionalParams] !== undefined) {
+          requestData[key] = optionalParams[key as keyof typeof optionalParams];
+        }
+      });
+      log(`Starting webpage parse for: ${url}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.WEBPARSER_PARSE, requestData);
+        log(`Webpage parse complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Webpage parse error:", error);
+        return { content: [{ type: "text", text: `Webpage parse API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_sitemap",
+    "Fetch URLs from website sitemap",
+    {
+      url: z.string().describe("Website URL to fetch sitemap from"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ url, timeout }) => {
+      const requestData = { timeout, url };
+      log(`Starting sitemap fetch for: ${url}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.WEBPARSER_SITEMAP, requestData);
+        log(`Sitemap fetch complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Sitemap fetch error:", error);
+        return { content: [{ type: "text", text: `Sitemap fetch API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== CHATGPT DEEP RESEARCH TOOLS =====
+
+  server.tool(
+    "search",
+    "Search tool optimized for ChatGPT Deep Research mode",
+    {
+      query: z.string().describe("Search query"),
+      count: z.number().default(10).describe("Max results to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count };
+      log(`Starting ChatGPT Deep Research search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.SEARCH_USERS, requestData);
+        log(`Search complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Search error:", error);
+        return { content: [{ type: "text", text: `Search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "fetch",
+    "Fetch tool optimized for ChatGPT Deep Research mode - retrieves complete LinkedIn profile information",
+    {
+      id: z.string().describe("LinkedIn profile URL or username to fetch"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ id, timeout }) => {
+      const requestData = { timeout, user: id, with_experience: true, with_education: true, with_skills: true };
+      log(`Starting ChatGPT Deep Research fetch for: ${id}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.USER_PROFILE, requestData);
+        log(`Fetch complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Fetch error:", error);
+        return { content: [{ type: "text", text: `Fetch API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  log("AnySite MCP Server initialized with 57 tools");
   log("Management tools (chat, connections, posting) require ACCOUNT_ID");
 
   return server;
