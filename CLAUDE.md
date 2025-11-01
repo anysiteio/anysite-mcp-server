@@ -4,7 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a Model Context Protocol (MCP) server for AnySite's LinkedIn and Instagram APIs. It provides comprehensive data access including LinkedIn user search, profile lookup, posts, reactions, comments, chat functionality, connection management, company information, Instagram user profiles and posts, and Reddit/Google search capabilities.
+This is a comprehensive Model Context Protocol (MCP) server providing **57 tools** across multiple platforms through the AnySite API:
+
+- **LinkedIn (26 tools):** User search, Sales Navigator, profiles, posts, reactions, comments, endorsers, certificates, email lookup (database & search), chat, connections, company data, management operations
+- **Instagram (8 tools):** User profiles, posts, reels, likes, comments, followers/following, post search
+- **Twitter/X (5 tools):** User profiles, user search, posts, advanced post search with 15+ filters, tweet details
+- **Reddit (3 tools):** Post search with filters, post details, comments
+- **Web Parser (2 tools):** Webpage parsing with 14+ filter options, sitemap extraction
+- **Other (3 tools):** Google search, ChatGPT Deep Research (search/fetch) tools
+
+This server enables data retrieval, account management, content extraction, and web scraping capabilities across all major social platforms.
 
 ## Build and Development Commands
 
@@ -16,10 +25,10 @@ This is a Model Context Protocol (MCP) server for AnySite's LinkedIn and Instagr
 ## Code Architecture
 
 ### Entry Point (`src/index.ts`)
-- Main MCP server implementation with comprehensive LinkedIn API integration
+- Smithery TypeScript runtime adapter implementation
 - Exports executable CLI tools: `anysite-mcp`, `anysite`, `mcp`
 - Uses Model Context Protocol SDK for server functionality
-- Implements 19+ LinkedIn tools and additional Reddit/Google search
+- Implements 57 tools across LinkedIn, Instagram, Twitter/X, Reddit, and Web Parser
 
 ### Type System (`src/types.ts`)
 - Complete TypeScript definitions for all API endpoints
@@ -41,12 +50,16 @@ This is a Model Context Protocol (MCP) server for AnySite's LinkedIn and Instagr
 - Timeout support (20-1500 seconds) for long-running operations
 
 #### Tool Categories
-1. **Search & Lookup**: User search, profile lookup, email lookup, company search
-2. **Posts & Content**: User posts, post comments/reactions/reposts, post search, company posts
-3. **Management**: Chat messages, connection requests, post creation/commenting
-4. **Company Data**: Company lookup, employee search, Google company search, company posts
-5. **Instagram**: User profiles, user posts, post comments
-6. **External APIs**: Reddit search, Google search
+1. **LinkedIn Search & Lookup** (7 tools): User search, Sales Navigator search, profile lookup, email lookup (search & database), company search
+2. **LinkedIn Posts & Content** (7 tools): User posts, reactions, comments, post search, post comments/reactions/reposts, company posts
+3. **LinkedIn User Data** (4 tools): Connections, conversations, endorsers, certificates
+4. **LinkedIn Management** (4 tools): Account profile, chat messages, connection requests, post creation/commenting
+5. **LinkedIn Company Data** (4 tools): Company lookup, employee search, Google company search, company posts
+6. **Instagram** (8 tools): User profiles, posts, reels, likes, comments, followers/following, post search
+7. **Twitter/X** (5 tools): User profiles, user search, posts, advanced post search, tweet details
+8. **Reddit** (3 tools): Post search, post details, comments
+9. **Web Parser** (2 tools): Webpage parsing with flexible filtering, sitemap extraction
+10. **Other** (3 tools): Google search, ChatGPT Deep Research tools
 
 ### URN Format Requirements
 - User URNs must include `fsd_profile:` prefix (e.g., `fsd_profile:ACoAAEWn01Q...`)

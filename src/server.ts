@@ -57,6 +57,24 @@ import {
   InstagramUserPostsArgs,
   InstagramPostCommentsArgs,
   LinkedinCompanyPostsArgs,
+  LinkedinUserEndorsersArgs,
+  LinkedinUserCertificatesArgs,
+  LinkedinUserEmailDbArgs,
+  LinkedinManagementMeArgs,
+  InstagramPostArgs,
+  InstagramPostLikesArgs,
+  InstagramUserFriendshipsArgs,
+  InstagramSearchPostsArgs,
+  InstagramUserReelsArgs,
+  TwitterUserArgs,
+  TwitterSearchUsersArgs,
+  TwitterUserPostsArgs,
+  TwitterSearchPostsArgs,
+  TwitterPostArgs,
+  WebParserParseArgs,
+  WebParserSitemapArgs,
+  ChatGPTSearchArgs,
+  ChatGPTFetchArgs,
   isValidLinkedinSearchUsersArgs,
   isValidLinkedinUserProfileArgs,
   isValidLinkedinEmailUserArgs,
@@ -85,7 +103,25 @@ import {
   isValidInstagramUserArgs,
   isValidInstagramUserPostsArgs,
   isValidInstagramPostCommentsArgs,
-  isValidLinkedinCompanyPostsArgs
+  isValidLinkedinCompanyPostsArgs,
+  isValidLinkedinUserEndorsersArgs,
+  isValidLinkedinUserCertificatesArgs,
+  isValidLinkedinUserEmailDbArgs,
+  isValidLinkedinManagementMeArgs,
+  isValidInstagramPostArgs,
+  isValidInstagramPostLikesArgs,
+  isValidInstagramUserFriendshipsArgs,
+  isValidInstagramSearchPostsArgs,
+  isValidInstagramUserReelsArgs,
+  isValidTwitterUserArgs,
+  isValidTwitterSearchUsersArgs,
+  isValidTwitterUserPostsArgs,
+  isValidTwitterSearchPostsArgs,
+  isValidTwitterPostArgs,
+  isValidWebParserParseArgs,
+  isValidWebParserSitemapArgs,
+  isValidChatGPTSearchArgs,
+  isValidChatGPTFetchArgs
 } from "./types.js";
 
 debugLog("Loading dotenv...");
@@ -157,6 +193,26 @@ const API_CONFIG = {
     INSTAGRAM_USER: "/api/instagram/user",
     INSTAGRAM_USER_POSTS: "/api/instagram/user/posts",
     INSTAGRAM_POST_COMMENTS: "/api/instagram/post/comments",
+    // New LinkedIn endpoints
+    LINKEDIN_USER_ENDORSERS: "/api/linkedin/user/endorsers",
+    LINKEDIN_USER_CERTIFICATES: "/api/linkedin/user/certificates",
+    LINKEDIN_USER_EMAIL_DB: "/api/linkedin/user/email",
+    LINKEDIN_MANAGEMENT_ME: "/api/linkedin/management/me",
+    // New Instagram endpoints
+    INSTAGRAM_POST: "/api/instagram/post",
+    INSTAGRAM_POST_LIKES: "/api/instagram/post/likes",
+    INSTAGRAM_USER_FRIENDSHIPS: "/api/instagram/user/friendships",
+    INSTAGRAM_SEARCH_POSTS: "/api/instagram/search/posts",
+    INSTAGRAM_USER_REELS: "/api/instagram/user/reels",
+    // Twitter/X endpoints
+    TWITTER_USER: "/api/twitter/user",
+    TWITTER_SEARCH_USERS: "/api/twitter/search/users",
+    TWITTER_USER_POSTS: "/api/twitter/user/posts",
+    TWITTER_SEARCH_POSTS: "/api/twitter/search/posts",
+    TWITTER_POST: "/api/twitter/post",
+    // Web Parser endpoints
+    WEBPARSER_PARSE: "/api/webparser/parse",
+    WEBPARSER_SITEMAP: "/api/webparser/sitemap",
   }
 } as const;
 
@@ -813,6 +869,285 @@ const GET_LINKEDIN_COMPANY_POSTS_TOOL: Tool = {
   }
 };
 
+// ===== NEW LINKEDIN TOOLS =====
+
+const GET_LINKEDIN_USER_ENDORSERS_TOOL: Tool = {
+  name: "get_linkedin_user_endorsers",
+  description: "Get LinkedIn user endorsers by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (with fsd_profile: prefix)" },
+      count: { type: "number", description: "Max endorsers to return", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const GET_LINKEDIN_USER_CERTIFICATES_TOOL: Tool = {
+  name: "get_linkedin_user_certificates",
+  description: "Get LinkedIn user certificates by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (with fsd_profile: prefix)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const GET_LINKEDIN_USER_EMAIL_DB_TOOL: Tool = {
+  name: "get_linkedin_user_email_db",
+  description: "Get LinkedIn user email from internal database by internal_id, profile URL, alias, or set of them (max 10)",
+  inputSchema: {
+    type: "object",
+    properties: {
+      profile: { type: "string", description: "LinkedIn internal_id, profile URL, alias, or set of them (max 10)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["profile"]
+  }
+};
+
+const GET_LINKEDIN_MANAGEMENT_ME_TOOL: Tool = {
+  name: "get_linkedin_management_me",
+  description: "Get own LinkedIn profile information (requires ACCOUNT_ID)",
+  inputSchema: {
+    type: "object",
+    properties: {
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: []
+  }
+};
+
+// ===== NEW INSTAGRAM TOOLS =====
+
+const GET_INSTAGRAM_POST_TOOL: Tool = {
+  name: "get_instagram_post",
+  description: "Get Instagram post by ID",
+  inputSchema: {
+    type: "object",
+    properties: {
+      post: { type: "string", description: "Post ID" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["post"]
+  }
+};
+
+const GET_INSTAGRAM_POST_LIKES_TOOL: Tool = {
+  name: "get_instagram_post_likes",
+  description: "Get likes from an Instagram post",
+  inputSchema: {
+    type: "object",
+    properties: {
+      post: { type: "string", description: "Post ID" },
+      count: { type: "number", description: "Max likes to return" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["post", "count"]
+  }
+};
+
+const GET_INSTAGRAM_USER_FRIENDSHIPS_TOOL: Tool = {
+  name: "get_instagram_user_friendships",
+  description: "Get followers or following list from Instagram user",
+  inputSchema: {
+    type: "object",
+    properties: {
+      user: { type: "string", description: "User ID, alias or URL" },
+      count: { type: "number", description: "Max results to return" },
+      type: { type: "string", enum: ["followers", "following"], description: "Type of relationships to fetch" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["user", "count", "type"]
+  }
+};
+
+const SEARCH_INSTAGRAM_POSTS_TOOL: Tool = {
+  name: "search_instagram_posts",
+  description: "Search Instagram posts by query",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query" },
+      count: { type: "number", description: "Max results to return" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["query", "count"]
+  }
+};
+
+const GET_INSTAGRAM_USER_REELS_TOOL: Tool = {
+  name: "get_instagram_user_reels",
+  description: "Get reels from an Instagram user profile",
+  inputSchema: {
+    type: "object",
+    properties: {
+      user: { type: "string", description: "User ID, alias or URL" },
+      count: { type: "number", description: "Max reels to return" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["user", "count"]
+  }
+};
+
+// ===== TWITTER/X TOOLS =====
+
+const GET_TWITTER_USER_TOOL: Tool = {
+  name: "get_twitter_user",
+  description: "Get Twitter/X user profile information",
+  inputSchema: {
+    type: "object",
+    properties: {
+      user: { type: "string", description: "User Alias or URL" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["user"]
+  }
+};
+
+const SEARCH_TWITTER_USERS_TOOL: Tool = {
+  name: "search_twitter_users",
+  description: "Search Twitter/X users",
+  inputSchema: {
+    type: "object",
+    properties: {
+      count: { type: "number", description: "Max results to return" },
+      query: { type: "string", description: "Main search users query" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+const GET_TWITTER_USER_POSTS_TOOL: Tool = {
+  name: "get_twitter_user_posts",
+  description: "Get posts from a Twitter/X user",
+  inputSchema: {
+    type: "object",
+    properties: {
+      user: { type: "string", description: "User ID, alias or URL" },
+      count: { type: "number", description: "Max posts to return" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["user", "count"]
+  }
+};
+
+const SEARCH_TWITTER_POSTS_TOOL: Tool = {
+  name: "search_twitter_posts",
+  description: "Search Twitter/X posts with advanced filtering",
+  inputSchema: {
+    type: "object",
+    properties: {
+      count: { type: "number", description: "Max results to return" },
+      query: { type: "string", description: "Main search query" },
+      exact_phrase: { type: "string", description: "Exact phrase (in quotes)" },
+      any_of_these_words: { type: "string", description: "Any of these words (OR condition)" },
+      none_of_these_words: { type: "string", description: "None of these words (NOT condition)" },
+      these_hashtags: { type: "string", description: "These hashtags" },
+      language: { type: "string", description: "Language of tweets" },
+      from_these_accounts: { type: "string", description: "From these accounts" },
+      to_these_accounts: { type: "string", description: "To these accounts" },
+      mentioning_these_accounts: { type: "string", description: "Mentioning these accounts (username with @)" },
+      min_replies: { type: "string", description: "Minimum number of replies" },
+      min_likes: { type: "string", description: "Minimum number of likes" },
+      min_retweets: { type: "string", description: "Minimum number of retweets" },
+      from_date: { type: "string", description: "Starting date for tweets search (timestamp)" },
+      to_date: { type: "string", description: "Ending date for tweets search (timestamp)" },
+      search_type: { type: "string", enum: ["Top", "Latest", "People", "Photos", "Videos"], description: "Type of search results", default: "Top" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+const GET_TWITTER_POST_TOOL: Tool = {
+  name: "get_twitter_post",
+  description: "Get Twitter/X post details",
+  inputSchema: {
+    type: "object",
+    properties: {
+      post_url: { type: "string", description: "Twitter post URL" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["post_url"]
+  }
+};
+
+// ===== WEB PARSER TOOLS =====
+
+const PARSE_WEBPAGE_TOOL: Tool = {
+  name: "parse_webpage",
+  description: "Parse and extract content from any webpage with flexible filtering options",
+  inputSchema: {
+    type: "object",
+    properties: {
+      url: { type: "string", description: "URL of the page to parse" },
+      include_tags: { type: "array", items: { type: "string" }, description: "CSS selectors of elements to include" },
+      exclude_tags: { type: "array", items: { type: "string" }, description: "CSS selectors or wildcard masks of elements to exclude" },
+      only_main_content: { type: "boolean", description: "Extract only main content of the page", default: false },
+      remove_comments: { type: "boolean", description: "Remove HTML comments", default: true },
+      resolve_srcset: { type: "boolean", description: "Convert image srcset to src", default: true },
+      return_full_html: { type: "boolean", description: "Return full HTML document or only body content", default: false },
+      min_text_block: { type: "number", description: "Minimum text block size for main content detection", default: 200 },
+      remove_base64_images: { type: "boolean", description: "Remove base64-encoded images", default: true },
+      strip_all_tags: { type: "boolean", description: "Remove all HTML tags and return plain text only", default: false },
+      extract_contacts: { type: "boolean", description: "Extract links, emails, and phone numbers", default: false },
+      same_origin_links: { type: "boolean", description: "Only extract links from the same domain", default: false },
+      social_links_only: { type: "boolean", description: "Only extract social media links", default: false },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["url"]
+  }
+};
+
+const GET_SITEMAP_TOOL: Tool = {
+  name: "get_sitemap",
+  description: "Fetch URLs from website sitemap",
+  inputSchema: {
+    type: "object",
+    properties: {
+      url: { type: "string", description: "Website URL to fetch sitemap from" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["url"]
+  }
+};
+
+// ===== CHATGPT DEEP RESEARCH TOOLS =====
+
+const CHATGPT_SEARCH_TOOL: Tool = {
+  name: "search",
+  description: "Search tool optimized for ChatGPT Deep Research mode",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query" },
+      count: { type: "number", description: "Max results to return", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["query"]
+  }
+};
+
+const CHATGPT_FETCH_TOOL: Tool = {
+  name: "fetch",
+  description: "Fetch tool optimized for ChatGPT Deep Research mode - retrieves complete LinkedIn profile information",
+  inputSchema: {
+    type: "object",
+    properties: {
+      id: { type: "string", description: "LinkedIn profile URL or username to fetch" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["id"]
+  }
+};
+
 const server = new Server(
   { name: "anysite-mcp", version: "0.1.0" },
   {
@@ -873,7 +1208,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     INSTAGRAM_USER_TOOL,
     INSTAGRAM_USER_POSTS_TOOL,
     INSTAGRAM_POST_COMMENTS_TOOL,
-    GET_LINKEDIN_COMPANY_POSTS_TOOL
+    GET_LINKEDIN_COMPANY_POSTS_TOOL,
+    // New LinkedIn tools
+    GET_LINKEDIN_USER_ENDORSERS_TOOL,
+    GET_LINKEDIN_USER_CERTIFICATES_TOOL,
+    GET_LINKEDIN_USER_EMAIL_DB_TOOL,
+    GET_LINKEDIN_MANAGEMENT_ME_TOOL,
+    // New Instagram tools
+    GET_INSTAGRAM_POST_TOOL,
+    GET_INSTAGRAM_POST_LIKES_TOOL,
+    GET_INSTAGRAM_USER_FRIENDSHIPS_TOOL,
+    SEARCH_INSTAGRAM_POSTS_TOOL,
+    GET_INSTAGRAM_USER_REELS_TOOL,
+    // Twitter/X tools
+    GET_TWITTER_USER_TOOL,
+    SEARCH_TWITTER_USERS_TOOL,
+    GET_TWITTER_USER_POSTS_TOOL,
+    SEARCH_TWITTER_POSTS_TOOL,
+    GET_TWITTER_POST_TOOL,
+    // Web Parser tools
+    PARSE_WEBPAGE_TOOL,
+    GET_SITEMAP_TOOL,
+    // ChatGPT Deep Research tools
+    CHATGPT_SEARCH_TOOL,
+    CHATGPT_FETCH_TOOL
   ]
 }));
 
@@ -2162,6 +2520,450 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 text: `LinkedIn company posts API error: ${formatError(error)}`
               }
             ],
+            isError: true
+          };
+        }
+      }
+
+      // ===== NEW LINKEDIN TOOLS =====
+
+      case "get_linkedin_user_endorsers": {
+        if (!isValidLinkedinUserEndorsersArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user endorsers arguments");
+        }
+        const { urn, count = 10, timeout = 300 } = args as LinkedinUserEndorsersArgs;
+        const normalizedUrn = normalizeUserURN(urn);
+        const requestData = { timeout, urn: normalizedUrn, count };
+
+        log(`Starting LinkedIn user endorsers lookup for: ${normalizedUrn}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_ENDORSERS, requestData);
+          log(`User endorsers lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("LinkedIn user endorsers lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user endorsers API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_linkedin_user_certificates": {
+        if (!isValidLinkedinUserCertificatesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user certificates arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserCertificatesArgs;
+        const normalizedUrn = normalizeUserURN(urn);
+        const requestData = { timeout, urn: normalizedUrn };
+
+        log(`Starting LinkedIn user certificates lookup for: ${normalizedUrn}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_CERTIFICATES, requestData);
+          log(`User certificates lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("LinkedIn user certificates lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user certificates API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_linkedin_user_email_db": {
+        if (!isValidLinkedinUserEmailDbArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user email DB arguments");
+        }
+        const { profile, timeout = 300 } = args as LinkedinUserEmailDbArgs;
+        const requestData = { timeout, profile };
+
+        log(`Starting LinkedIn user email DB lookup for: ${profile}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EMAIL_DB, requestData);
+          log(`User email DB lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("LinkedIn user email DB lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user email DB API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_linkedin_management_me": {
+        if (!isValidLinkedinManagementMeArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn management me arguments");
+        }
+        const { timeout = 300 } = args as LinkedinManagementMeArgs;
+        const requestData: any = { timeout };
+        if (ACCOUNT_ID()) requestData.account_id = ACCOUNT_ID();
+
+        log(`Starting LinkedIn management me lookup`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_ME, requestData);
+          log(`Management me lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("LinkedIn management me lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn management me API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      // ===== NEW INSTAGRAM TOOLS =====
+
+      case "get_instagram_post": {
+        if (!isValidInstagramPostArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Instagram post arguments");
+        }
+        const { post, timeout = 300 } = args as InstagramPostArgs;
+        const requestData = { timeout, post };
+
+        log(`Starting Instagram post lookup for: ${post}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_POST, requestData);
+          log(`Instagram post lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Instagram post lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Instagram post API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_instagram_post_likes": {
+        if (!isValidInstagramPostLikesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Instagram post likes arguments");
+        }
+        const { post, count, timeout = 300 } = args as InstagramPostLikesArgs;
+        const requestData = { timeout, post, count };
+
+        log(`Starting Instagram post likes lookup for: ${post}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_POST_LIKES, requestData);
+          log(`Instagram post likes lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Instagram post likes lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Instagram post likes API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_instagram_user_friendships": {
+        if (!isValidInstagramUserFriendshipsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Instagram user friendships arguments");
+        }
+        const { user, count, type, timeout = 300 } = args as InstagramUserFriendshipsArgs;
+        const requestData = { timeout, user, count, type };
+
+        log(`Starting Instagram user friendships lookup for: ${user} (${type})`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_USER_FRIENDSHIPS, requestData);
+          log(`Instagram user friendships lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Instagram user friendships lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Instagram user friendships API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "search_instagram_posts": {
+        if (!isValidInstagramSearchPostsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Instagram search posts arguments");
+        }
+        const { query, count, timeout = 300 } = args as InstagramSearchPostsArgs;
+        const requestData = { timeout, query, count };
+
+        log(`Starting Instagram posts search for: ${query}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_SEARCH_POSTS, requestData);
+          log(`Instagram posts search complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Instagram posts search error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Instagram posts search API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_instagram_user_reels": {
+        if (!isValidInstagramUserReelsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Instagram user reels arguments");
+        }
+        const { user, count, timeout = 300 } = args as InstagramUserReelsArgs;
+        const requestData = { timeout, user, count };
+
+        log(`Starting Instagram user reels lookup for: ${user}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.INSTAGRAM_USER_REELS, requestData);
+          log(`Instagram user reels lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Instagram user reels lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Instagram user reels API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      // ===== TWITTER/X TOOLS =====
+
+      case "get_twitter_user": {
+        if (!isValidTwitterUserArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter user arguments");
+        }
+        const { user, timeout = 300 } = args as TwitterUserArgs;
+        const requestData = { timeout, user };
+
+        log(`Starting Twitter user lookup for: ${user}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_USER, requestData);
+          log(`Twitter user lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Twitter user lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Twitter user API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "search_twitter_users": {
+        if (!isValidTwitterSearchUsersArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter search users arguments");
+        }
+        const { count, query, timeout = 300 } = args as TwitterSearchUsersArgs;
+        const requestData: any = { timeout, count };
+        if (query) requestData.query = query;
+
+        log(`Starting Twitter users search`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_SEARCH_USERS, requestData);
+          log(`Twitter users search complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Twitter users search error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Twitter users search API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_twitter_user_posts": {
+        if (!isValidTwitterUserPostsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter user posts arguments");
+        }
+        const { user, count, timeout = 300 } = args as TwitterUserPostsArgs;
+        const requestData = { timeout, user, count };
+
+        log(`Starting Twitter user posts lookup for: ${user}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_USER_POSTS, requestData);
+          log(`Twitter user posts lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Twitter user posts lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Twitter user posts API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "search_twitter_posts": {
+        if (!isValidTwitterSearchPostsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter search posts arguments");
+        }
+        const typedArgs = args as TwitterSearchPostsArgs;
+        const { count, timeout = 300, ...optionalParams } = typedArgs;
+        const requestData: any = { timeout, count };
+
+        // Add all optional search parameters
+        Object.keys(optionalParams).forEach(key => {
+          if (optionalParams[key as keyof typeof optionalParams] !== undefined) {
+            requestData[key] = optionalParams[key as keyof typeof optionalParams];
+          }
+        });
+
+        log(`Starting Twitter posts search`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_SEARCH_POSTS, requestData);
+          log(`Twitter posts search complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Twitter posts search error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Twitter posts search API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_twitter_post": {
+        if (!isValidTwitterPostArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter post arguments");
+        }
+        const { post_url, timeout = 300 } = args as TwitterPostArgs;
+        const requestData = { timeout, post_url };
+
+        log(`Starting Twitter post lookup for: ${post_url}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_POST, requestData);
+          log(`Twitter post lookup complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Twitter post lookup error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Twitter post API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      // ===== WEB PARSER TOOLS =====
+
+      case "parse_webpage": {
+        if (!isValidWebParserParseArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid web parser parse arguments");
+        }
+        const typedArgs = args as WebParserParseArgs;
+        const { url, timeout = 300, ...optionalParams } = typedArgs;
+        const requestData: any = { timeout, url };
+
+        // Add all optional parameters
+        Object.keys(optionalParams).forEach(key => {
+          if (optionalParams[key as keyof typeof optionalParams] !== undefined) {
+            requestData[key] = optionalParams[key as keyof typeof optionalParams];
+          }
+        });
+
+        log(`Starting webpage parse for: ${url}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.WEBPARSER_PARSE, requestData);
+          log(`Webpage parse complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Webpage parse error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Webpage parse API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "get_sitemap": {
+        if (!isValidWebParserSitemapArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid sitemap arguments");
+        }
+        const { url, timeout = 300 } = args as WebParserSitemapArgs;
+        const requestData = { timeout, url };
+
+        log(`Starting sitemap fetch for: ${url}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.WEBPARSER_SITEMAP, requestData);
+          log(`Sitemap fetch complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Sitemap fetch error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Sitemap fetch API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      // ===== CHATGPT DEEP RESEARCH TOOLS =====
+
+      case "search": {
+        if (!isValidChatGPTSearchArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid search arguments");
+        }
+        const { query, count = 10, timeout = 300 } = args as ChatGPTSearchArgs;
+        const requestData = { timeout, query, count };
+
+        log(`Starting ChatGPT Deep Research search for: ${query}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.SEARCH_USERS, requestData);
+          log(`Search complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Search error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Search API error: ${formatError(error)}` }],
+            isError: true
+          };
+        }
+      }
+
+      case "fetch": {
+        if (!isValidChatGPTFetchArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid fetch arguments");
+        }
+        const { id, timeout = 300 } = args as ChatGPTFetchArgs;
+        const requestData = { timeout, user: id, with_experience: true, with_education: true, with_skills: true };
+
+        log(`Starting ChatGPT Deep Research fetch for: ${id}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.USER_PROFILE, requestData);
+          log(`Fetch complete`);
+          return {
+            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
+          };
+        } catch (error) {
+          log("Fetch error:", error);
+          return {
+            content: [{ type: "text", mimeType: "text/plain", text: `Fetch API error: ${formatError(error)}` }],
             isError: true
           };
         }

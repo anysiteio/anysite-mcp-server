@@ -976,3 +976,343 @@ export function isValidLinkedinCompanyPostsArgs(
 
   return true;
 }
+
+// ===== NEW MISSING TYPES =====
+
+// LinkedIn additional types
+export interface LinkedinUserEndorsersArgs {
+  urn: string;
+  count?: number;
+  timeout?: number;
+}
+
+export interface LinkedinUserCertificatesArgs {
+  urn: string;
+  timeout?: number;
+}
+
+export interface LinkedinUserEmailDbArgs {
+  profile: string; // LinkedIn internal_id, profile URL, alias, or set of them (max 10)
+  timeout?: number;
+}
+
+export interface LinkedinManagementMeArgs {
+  timeout?: number;
+}
+
+// Instagram additional types
+export interface InstagramPostArgs {
+  post: string; // Post ID
+  timeout?: number;
+}
+
+export interface InstagramPostLikesArgs {
+  post: string; // Post ID
+  count: number;
+  timeout?: number;
+}
+
+export interface InstagramUserFriendshipsArgs {
+  user: string; // User ID, alias or URL
+  count: number;
+  type: "followers" | "following"; // Type of relationships to fetch
+  timeout?: number;
+}
+
+export interface InstagramSearchPostsArgs {
+  query: string;
+  count: number;
+  timeout?: number;
+}
+
+export interface InstagramUserReelsArgs {
+  user: string; // User ID, alias or URL
+  count: number;
+  timeout?: number;
+}
+
+// Twitter/X types
+export interface TwitterUserArgs {
+  user: string; // User Alias or URL
+  timeout?: number;
+}
+
+export interface TwitterSearchUsersArgs {
+  count: number;
+  query?: string; // Main search users query
+  timeout?: number;
+}
+
+export interface TwitterUserPostsArgs {
+  user: string; // User ID, alias or URL
+  count: number;
+  timeout?: number;
+}
+
+export interface TwitterSearchPostsArgs {
+  count: number;
+  query?: string; // Main search query
+  exact_phrase?: string; // Exact phrase (in quotes)
+  any_of_these_words?: string; // Any of these words (OR condition)
+  none_of_these_words?: string; // None of these words (NOT condition)
+  these_hashtags?: string; // These hashtags
+  language?: string; // Language of tweets
+  from_these_accounts?: string; // From these accounts
+  to_these_accounts?: string; // To these accounts
+  mentioning_these_accounts?: string; // Mentioning these accounts (username with @)
+  min_replies?: string; // Minimum number of replies
+  min_likes?: string; // Minimum number of likes
+  min_retweets?: string; // Minimum number of retweets
+  from_date?: string; // Starting date for tweets search (timestamp)
+  to_date?: string; // Ending date for tweets search (timestamp)
+  search_type?: "Top" | "Latest" | "People" | "Photos" | "Videos"; // Type of search results
+  timeout?: number;
+}
+
+export interface TwitterPostArgs {
+  post_url: string; // Twitter post URL
+  timeout?: number;
+}
+
+// Web Parser types
+export interface WebParserParseArgs {
+  url: string; // URL of the page to parse
+  include_tags?: string[]; // CSS selectors of elements to include
+  exclude_tags?: string[]; // CSS selectors or wildcard masks of elements to exclude
+  only_main_content?: boolean; // Extract only main content of the page
+  remove_comments?: boolean; // Remove HTML comments
+  resolve_srcset?: boolean; // Convert image srcset to src
+  return_full_html?: boolean; // Return full HTML document (True) or only body content (False)
+  min_text_block?: number; // Minimum text block size for main content detection
+  remove_base64_images?: boolean; // Remove base64-encoded images
+  strip_all_tags?: boolean; // Remove all HTML tags and return plain text only
+  extract_contacts?: boolean; // Extract links, emails, and phone numbers
+  same_origin_links?: boolean; // Only extract links from the same domain
+  social_links_only?: boolean; // Only extract social media links
+  timeout?: number;
+}
+
+export interface WebParserSitemapArgs {
+  url: string; // Website URL to fetch sitemap from
+  timeout?: number;
+}
+
+// ChatGPT Deep Research types (optional, for ChatGPT clients only)
+export interface ChatGPTSearchArgs {
+  query: string;
+  count?: number;
+  timeout?: number;
+}
+
+export interface ChatGPTFetchArgs {
+  id: string; // LinkedIn profile URL or username to fetch
+  timeout?: number;
+}
+
+// ===== VALIDATION FUNCTIONS FOR NEW TYPES =====
+
+// LinkedIn validations
+export function isValidLinkedinUserEndorsersArgs(
+  args: unknown
+): args is LinkedinUserEndorsersArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserCertificatesArgs(
+  args: unknown
+): args is LinkedinUserCertificatesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserEmailDbArgs(
+  args: unknown
+): args is LinkedinUserEmailDbArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.profile !== "string" || !obj.profile.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinManagementMeArgs(
+  args: unknown
+): args is LinkedinManagementMeArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// Instagram validations
+export function isValidInstagramPostArgs(
+  args: unknown
+): args is InstagramPostArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.post !== "string" || !obj.post.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidInstagramPostLikesArgs(
+  args: unknown
+): args is InstagramPostLikesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.post !== "string" || !obj.post.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidInstagramUserFriendshipsArgs(
+  args: unknown
+): args is InstagramUserFriendshipsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.user !== "string" || !obj.user.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (typeof obj.type !== "string" || !["followers", "following"].includes(obj.type)) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidInstagramSearchPostsArgs(
+  args: unknown
+): args is InstagramSearchPostsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidInstagramUserReelsArgs(
+  args: unknown
+): args is InstagramUserReelsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.user !== "string" || !obj.user.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// Twitter/X validations
+export function isValidTwitterUserArgs(
+  args: unknown
+): args is TwitterUserArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.user !== "string" || !obj.user.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidTwitterSearchUsersArgs(
+  args: unknown
+): args is TwitterSearchUsersArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.query !== undefined && typeof obj.query !== "string") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidTwitterUserPostsArgs(
+  args: unknown
+): args is TwitterUserPostsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.user !== "string" || !obj.user.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidTwitterSearchPostsArgs(
+  args: unknown
+): args is TwitterSearchPostsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.query !== undefined && typeof obj.query !== "string") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidTwitterPostArgs(
+  args: unknown
+): args is TwitterPostArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.post_url !== "string" || !obj.post_url.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// Web Parser validations
+export function isValidWebParserParseArgs(
+  args: unknown
+): args is WebParserParseArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.url !== "string" || !obj.url.trim()) return false;
+  if (obj.include_tags !== undefined && !Array.isArray(obj.include_tags)) return false;
+  if (obj.exclude_tags !== undefined && !Array.isArray(obj.exclude_tags)) return false;
+  if (obj.only_main_content !== undefined && typeof obj.only_main_content !== "boolean") return false;
+  if (obj.remove_comments !== undefined && typeof obj.remove_comments !== "boolean") return false;
+  if (obj.resolve_srcset !== undefined && typeof obj.resolve_srcset !== "boolean") return false;
+  if (obj.return_full_html !== undefined && typeof obj.return_full_html !== "boolean") return false;
+  if (obj.min_text_block !== undefined && typeof obj.min_text_block !== "number") return false;
+  if (obj.remove_base64_images !== undefined && typeof obj.remove_base64_images !== "boolean") return false;
+  if (obj.strip_all_tags !== undefined && typeof obj.strip_all_tags !== "boolean") return false;
+  if (obj.extract_contacts !== undefined && typeof obj.extract_contacts !== "boolean") return false;
+  if (obj.same_origin_links !== undefined && typeof obj.same_origin_links !== "boolean") return false;
+  if (obj.social_links_only !== undefined && typeof obj.social_links_only !== "boolean") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidWebParserSitemapArgs(
+  args: unknown
+): args is WebParserSitemapArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.url !== "string" || !obj.url.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ChatGPT Deep Research validations (optional)
+export function isValidChatGPTSearchArgs(
+  args: unknown
+): args is ChatGPTSearchArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidChatGPTFetchArgs(
+  args: unknown
+): args is ChatGPTFetchArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.id !== "string" || !obj.id.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
