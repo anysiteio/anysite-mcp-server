@@ -8,12 +8,12 @@
 
 Connect your AI agents to real-time data from LinkedIn, Instagram, Reddit, Twitter, and any website through a single MCP server.
 
-[![npm version](https://img.shields.io/npm/v/@anysite/mcp.svg)](https://www.npmjs.com/package/@anysite/mcp)
+[![npm version](https://img.shields.io/npm/v/@anysiteio/mcp.svg)](https://www.npmjs.com/package/@anysiteio/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/anysiteio/anysite-mcp-server)](https://github.com/anysiteio/anysite-mcp-server/stargazers)
 [![Documentation](https://img.shields.io/badge/docs-anysite.io-blue)](https://docs.anysite.io/mcp-server)
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](https://docs.anysite.io/mcp-server) • [🎮 Playground](https://app.anysite.io) • [💬 Discord](#) • [🐦 Twitter](#)
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](https://docs.anysite.io/mcp-server) • [🐦 Twitter](#)
 
 </div>
 
