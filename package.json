@@ -1,6 +1,6 @@
 {
   "name": "@anysiteio/mcp",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A comprehensive MCP server with 57 tools for LinkedIn, Instagram, Twitter/X, Reddit, and web scraping via AnySite API",
   "private": false,
   "type": "module",
