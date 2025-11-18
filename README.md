@@ -74,7 +74,7 @@ Perfect for **Claude Desktop, Cline, Cursor, Windsurf**, and other MCP clients t
 
 1. Sign up at [app.anysite.io](https://app.anysite.io) (100 free credits included)
 2. Navigate to **MCP Server Integration**
-3. Copy your OAuth URL: `https://api.anysite.io/mcp/sse`
+3. Copy your OAuth URL: `https://mcp.anysite.io/mcp`
 
 #### Step 2: Add to Your MCP Client
 
@@ -85,7 +85,7 @@ Perfect for **Claude Desktop, Cline, Cursor, Windsurf**, and other MCP clients t
 2. Click **Add Custom Connector**
 3. Fill in:
    - **Name:** AnySite MCP
-   - **OAuth URL:** `https://api.anysite.io/mcp/sse`
+   - **OAuth URL:** `https://mcp.anysite.io/mcp`
 4. Click **Add** → **Connect** → **Allow Access**
 
 📖 [Detailed Claude Desktop Setup Guide](https://docs.anysite.io/mcp-server/claude-desktop-tool/installation)
@@ -104,7 +104,7 @@ Add to your MCP configuration file:
       "command": "npx",
       "args": ["-y", "@anysite/mcp"],
       "env": {
-        "ANYSITE_OAUTH_URL": "https://api.anysite.io/mcp/sse"
+        "ANYSITE_OAUTH_URL": "https://mcp.anysite.io/mcp"
       }
     }
   }
