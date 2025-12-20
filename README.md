@@ -19,6 +19,20 @@ Connect your AI agents to real-time data from LinkedIn, Instagram, Reddit, Twitt
 
 ---
 
+## 💎 MCP Unlimited Plan
+
+**Unlimited access to all 65+ AnySite MCP tools for just $30/month** - perfect for AI agents and automation.
+
+Get unlimited requests through Remote MCP Server with no request limits. Ideal for Claude Desktop, Cursor, n8n, and any MCP-compatible client.
+
+**[📖 Learn more about MCP Unlimited →](https://docs.anysite.io/mcp-unlimited)**
+
+**Available integrations:**
+- [Make.com Integration](https://docs.anysite.io/mcp-server/unlimited-plan-make) - Connect with Make.com workflows
+- [Clay Integration](https://docs.anysite.io/mcp-server/unlimited-plan-clay) - Use with Clay enrichment platform
+
+---
+
 ## 🎯 What is AnySite MCP Server?
 
 AnySite MCP Server is a **Model Context Protocol (MCP)** implementation that gives AI agents direct access to web data through platform-specific APIs. Unlike traditional web scrapers, AnySite provides:
@@ -74,7 +88,7 @@ Perfect for **Claude Desktop, Cline, Cursor, Windsurf**, and other MCP clients t
 
 1. Sign up at [app.anysite.io](https://app.anysite.io) (100 free credits included)
 2. Navigate to **MCP Server Integration**
-3. Copy your OAuth URL: `https://mcp.anysite.io/mcp`
+3. Copy your OAuth URL: `https://mcp.anysite.io/`
 
 #### Step 2: Add to Your MCP Client
 
@@ -84,8 +98,8 @@ Perfect for **Claude Desktop, Cline, Cursor, Windsurf**, and other MCP clients t
 1. Open **Claude Desktop** → **Settings** → **Connectors**
 2. Click **Add Custom Connector**
 3. Fill in:
-   - **Name:** AnySite MCP
-   - **OAuth URL:** `https://mcp.anysite.io/mcp`
+   - **Name:** Anysite MCP
+   - **OAuth URL:** `https://mcp.anysite.io/`
 4. Click **Add** → **Connect** → **Allow Access**
 
 📖 [Detailed Claude Desktop Setup Guide](https://docs.anysite.io/mcp-server/claude-desktop-tool/installation)
@@ -231,51 +245,80 @@ sorted by top engagement
 ## 📖 Documentation
 
 ### 📚 Full Documentation
-- [AnySite MCP Server Docs](https://docs.anysite.io/mcp-server)
+- [Anysite MCP Server Docs](https://docs.anysite.io/mcp-server)
 - [API Reference](https://docs.anysite.io/api-reference)
 - [All Available Tools](https://docs.anysite.io/mcp-server/tools)
 
-### 🔧 Tool Categories (57 Total)
+### 🔧 Tool Categories (65+ Total)
 
 <details>
-<summary><b>LinkedIn Tools (26 tools)</b></summary>
+<summary><b>Web Search (1 tool)</b></summary>
 
-**Search & Discovery (7 tools)**
+- `duckduckgo_search` - Web search powered by DuckDuckGo (up to 20 results)
+
+</details>
+
+<details>
+<summary><b>Y Combinator (3 tools)</b></summary>
+
+- `get_yc_company` - Get comprehensive YC company information by slug
+- `search_yc_companies` - Search YC companies with filters (batch, status, industry)
+- `search_yc_founders` - Search YC founders by name, company, batch, industry
+
+</details>
+
+<details>
+<summary><b>YouTube (3 tools)</b></summary>
+
+- `search_youtube_videos` - Search YouTube videos by query
+- `get_youtube_video` - Get detailed video information by ID or URL
+- `get_youtube_video_subtitles` - Extract video subtitles with timestamps
+
+</details>
+
+<details>
+<summary><b>SEC (2 tools)</b></summary>
+
+- `search_sec_companies` - Search SEC EDGAR filings with advanced filters
+- `get_sec_document` - Retrieve full SEC document content by URL
+
+</details>
+
+<details>
+<summary><b>LinkedIn Tools (24 tools)</b></summary>
+
+**Search & Discovery (6 tools)**
 - `search_linkedin_users` - Advanced user search with 10+ filters
-- `linkedin_sn_search_users` - Sales Navigator advanced search
-- `get_linkedin_email_user` - Find users by email address
-- `get_linkedin_user_email_db` - Batch email lookup (up to 10 profiles)
-- `get_linkedin_google_company` - Find companies via Google search
-- `get_linkedin_company` - Company details lookup
-- `search_linkedin_posts` - Search posts by keywords, author, date
+- `search_linkedin_companies` - Search companies with advanced filters
+- `search_linkedin_educations` - Search educational institutions
+- `search_linkedin_industries` - Search industries for filtering
+- `search_linkedin_locations` - Search locations for filtering
+- `search_linkedin_jobs` - Search job postings with filters
 
-**Profile & Data (7 tools)**
+**User Profiles (6 tools)**
 - `get_linkedin_profile` - Full profile with experience, education, skills
+- `find_linkedin_user_email` - Find users by email address
+- `get_linkedin_user_email_db` - Get email from internal database (up to 10 profiles)
 - `get_linkedin_user_posts` - User's post history
-- `get_linkedin_user_reactions` - Posts user reacted to
 - `get_linkedin_user_comments` - User's comment history
-- `get_linkedin_user_connections` - Network connections
-- `get_linkedin_user_endorsers` - Skill endorsers
-- `get_linkedin_user_certificates` - User certificates
+- `get_linkedin_user_reactions` - Posts user reacted to
 
-**Company Intelligence (4 tools)**
+**Company Information (4 tools)**
+- `get_linkedin_company` - Company details lookup
+- `get_linkedin_company_employee_stats` - Employee statistics
 - `get_linkedin_company_employees` - Employee list with filters
 - `get_linkedin_company_posts` - Company updates
-- `get_linkedin_post_reposts` - Reshare analysis
-- `get_linkedin_conversations` - Conversation history
 
-**Engagement (4 tools)**
+**Content & Posts (6 tools)**
+- `search_linkedin_posts` - Search posts by keywords, author, date
+- `get_linkedin_post` - Get detailed post information
 - `get_linkedin_post_comments` - Comment threads
 - `get_linkedin_post_reactions` - Who reacted and how
 - `get_linkedin_post_reposts` - Reshare analysis
 
-**Account Management (4 tools)** - Requires ACCOUNT_ID
-- `get_linkedin_management_me` - Get own profile
-- `send_linkedin_chat_message` - Send DMs
-- `get_linkedin_chat_messages` - Retrieve conversations
-- `send_linkedin_connection` - Send connection requests
-- `send_linkedin_post_comment` - Comment on posts
-- `send_linkedin_post` - Create posts
+**Jobs & Groups (2 tools)**
+- `search_linkedin_jobs` - Job search with filters (already listed in Search)
+- `get_linkedin_group` - Get group information
 
 </details>
 
@@ -321,20 +364,11 @@ sorted by top engagement
 
 </details>
 
-<details>
-<summary><b>Other Tools (3 tools)</b></summary>
-
-- `google_search` - Google search with clean results
-- `search` - ChatGPT Deep Research optimized search
-- `fetch` - ChatGPT Deep Research optimized profile fetch
-
-</details>
-
 ---
 
 ## 🤝 Integrations
 
-AnySite MCP Server works with any MCP-compatible client:
+Anysite MCP Server works with any MCP-compatible client:
 
 ### AI Assistants
 - ✅ **Claude Desktop** - Native OAuth support
@@ -344,7 +378,7 @@ AnySite MCP Server works with any MCP-compatible client:
 - ✅ **Any MCP Client** - Standard protocol
 
 ### Development Tools
-- 🔧 **n8n** - [AnySite n8n nodes](https://github.com/anysiteio/n8n-nodes-anysite)
+- 🔧 **n8n** - [Anysite n8n nodes](https://github.com/anysiteio/n8n-nodes-anysite)
 - 🔧 **LangChain** - Custom tool integration
 - 🔧 **AutoGen** - Agent tool registration
 - 🔧 **REST API** - Direct API access
@@ -357,7 +391,7 @@ AnySite MCP Server works with any MCP-compatible client:
 | **Authentication** | OAuth (secure, one-click) | API keys in config |
 | **Updates** | Automatic | Manual git pull |
 | **Best For** | Production, end-users | Development, testing |
-| **Credentials** | Managed by AnySite | Self-managed |
+| **Credentials** | Managed by Anysite | Self-managed |
 | **Revocation** | One-click in dashboard | Manual removal |
 | **MCP Clients** | Claude Desktop, Cline, etc. | Any MCP client |
 
@@ -375,13 +409,13 @@ AnySite MCP Server works with any MCP-compatible client:
          │ MCP Protocol
          │
 ┌────────▼────────┐
-│  AnySite MCP    │
+│  Anysite MCP    │
 │     Server      │
 └────────┬────────┘
          │ REST API
          │
 ┌────────▼────────┐
-│  AnySite API    │ ← OAuth Authentication
+│  Anysite API    │ ← OAuth Authentication
 │   Platform      │ ← Rate Limiting
 └────────┬────────┘ ← Proxy Rotation
          │
@@ -496,7 +530,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Free Tier
 - ✅ 100 free credits on signup
-- ✅ All 57 tools available
+- ✅ All 65+ tools available
 - ✅ OAuth authentication
 - ⚠️ Rate limits apply
 
@@ -513,7 +547,7 @@ See [pricing details](https://anysite.io/pricing)
 ## 🔒 Security & Privacy
 
 - **OAuth 2.0** - Industry-standard authentication
-- **No Credential Storage** - Your API keys stay with AnySite
+- **No Credential Storage** - Your API keys stay with Anysite
 - **Encrypted Transport** - All data transmitted over HTTPS
 - **GDPR Compliant** - Data processing follows EU regulations
 - **Revocable Access** - One-click disconnect in dashboard

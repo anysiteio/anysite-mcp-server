@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a comprehensive Model Context Protocol (MCP) server providing **57 tools** across multiple platforms through the AnySite API:
+This is a comprehensive Model Context Protocol (MCP) server providing **57 tools** across multiple platforms through the Anysite API:
 
 - **LinkedIn (26 tools):** User search, Sales Navigator, profiles, posts, reactions, comments, endorsers, certificates, email lookup (database & search), chat, connections, company data, management operations
 - **Instagram (8 tools):** User profiles, posts, reels, likes, comments, followers/following, post search
