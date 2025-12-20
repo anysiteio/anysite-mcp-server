@@ -4,16 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a comprehensive Model Context Protocol (MCP) server providing **57 tools** across multiple platforms through the Anysite API:
+This is a comprehensive Model Context Protocol (MCP) server providing **69 tools** across multiple platforms through the Anysite API:
 
-- **LinkedIn (26 tools):** User search, Sales Navigator, profiles, posts, reactions, comments, endorsers, certificates, email lookup (database & search), chat, connections, company data, management operations
+- **LinkedIn (35 tools):** User search, Sales Navigator, profiles, posts, reactions, comments, endorsers, certificates, email lookup, chat, connections, company data, management operations, education, experience, skills, honors, patents, languages, groups, search extensions (educations/locations/industries/jobs/companies)
 - **Instagram (8 tools):** User profiles, posts, reels, likes, comments, followers/following, post search
-- **Twitter/X (5 tools):** User profiles, user search, posts, advanced post search with 15+ filters, tweet details
-- **Reddit (3 tools):** Post search with filters, post details, comments
+- **Twitter/X (4 tools):** User profiles, user search, posts, advanced post search with 15+ filters
+- **Reddit (5 tools):** Post search with filters, post details, comments, user posts, user comments
+- **YouTube (3 tools):** Video search, video details, subtitles extraction
+- **SEC (2 tools):** Company search in SEC EDGAR, document retrieval
+- **Y Combinator (3 tools):** Company lookup, company search, founder search
+- **DuckDuckGo (1 tool):** Web search
 - **Web Parser (2 tools):** Webpage parsing with 14+ filter options, sitemap extraction
-- **Other (3 tools):** Google search, ChatGPT Deep Research (search/fetch) tools
 
-This server enables data retrieval, account management, content extraction, and web scraping capabilities across all major social platforms.
+This server enables data retrieval, account management, content extraction, and web scraping capabilities across all major social platforms, video content, financial data (SEC), and startup ecosystems (Y Combinator).
 
 ## Build and Development Commands
 
@@ -28,7 +31,7 @@ This server enables data retrieval, account management, content extraction, and 
 - Smithery TypeScript runtime adapter implementation
 - Exports executable CLI tools: `anysite-mcp`, `anysite`, `mcp`
 - Uses Model Context Protocol SDK for server functionality
-- Implements 57 tools across LinkedIn, Instagram, Twitter/X, Reddit, and Web Parser
+- Implements 69 tools across LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo, and Web Parser
 
 ### Type System (`src/types.ts`)
 - Complete TypeScript definitions for all API endpoints
@@ -50,16 +53,20 @@ This server enables data retrieval, account management, content extraction, and 
 - Timeout support (20-1500 seconds) for long-running operations
 
 #### Tool Categories
-1. **LinkedIn Search & Lookup** (7 tools): User search, Sales Navigator search, profile lookup, email lookup (search & database), company search
+1. **LinkedIn Search & Lookup** (11 tools): User search, Sales Navigator search, profile lookup, email lookup (search & database), company search, education search, location search, industry search, job search
 2. **LinkedIn Posts & Content** (7 tools): User posts, reactions, comments, post search, post comments/reactions/reposts, company posts
-3. **LinkedIn User Data** (4 tools): Connections, conversations, endorsers, certificates
-4. **LinkedIn Management** (4 tools): Account profile, chat messages, connection requests, post creation/commenting
-5. **LinkedIn Company Data** (4 tools): Company lookup, employee search, Google company search, company posts
-6. **Instagram** (8 tools): User profiles, posts, reels, likes, comments, followers/following, post search
-7. **Twitter/X** (5 tools): User profiles, user search, posts, advanced post search, tweet details
-8. **Reddit** (3 tools): Post search, post details, comments
-9. **Web Parser** (2 tools): Webpage parsing with flexible filtering, sitemap extraction
-10. **Other** (3 tools): Google search, ChatGPT Deep Research tools
+3. **LinkedIn User Data** (10 tools): Connections, conversations, endorsers, certificates, education, experience, skills, honors, patents, languages
+4. **LinkedIn Management** (5 tools): Account profile, chat messages/attachments, connection requests, post creation/commenting, company mentions
+5. **LinkedIn Company Data** (5 tools): Company lookup, employee search, employee stats, Google company search, company posts
+6. **LinkedIn Groups** (1 tool): Group information
+7. **Instagram** (8 tools): User profiles, posts, reels, likes, comments, followers/following, post search
+8. **Twitter/X** (4 tools): User profiles, user search, posts, advanced post search
+9. **Reddit** (5 tools): Post search, post details, comments, user posts, user comments
+10. **YouTube** (3 tools): Video search, video details, subtitles
+11. **SEC** (2 tools): Company search, document retrieval
+12. **Y Combinator** (3 tools): Company information, company search, founder search
+13. **DuckDuckGo** (1 tool): Web search
+14. **Web Parser** (2 tools): Webpage parsing with flexible filtering, sitemap extraction
 
 ### URN Format Requirements
 - User URNs must include `fsd_profile:` prefix (e.g., `fsd_profile:ACoAAEWn01Q...`)

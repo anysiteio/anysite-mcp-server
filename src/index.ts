@@ -44,7 +44,6 @@ const API_CONFIG = {
     LINKEDIN_POST: "/api/linkedin/management/post",
     LINKEDIN_SN_SEARCH_USERS: "/api/linkedin/sn_search/users",
     CONVERSATIONS: "/api/linkedin/management/conversations",
-    GOOGLE_SEARCH: "/api/google/search",
     INSTAGRAM_USER: "/api/instagram/user",
     INSTAGRAM_USER_POSTS: "/api/instagram/user/posts",
     INSTAGRAM_POST_COMMENTS: "/api/instagram/post/comments",
@@ -64,10 +63,45 @@ const API_CONFIG = {
     TWITTER_SEARCH_USERS: "/api/twitter/search/users",
     TWITTER_USER_POSTS: "/api/twitter/user/posts",
     TWITTER_SEARCH_POSTS: "/api/twitter/search/posts",
-    TWITTER_POST: "/api/twitter/post",
     // Web Parser endpoints
     WEBPARSER_PARSE: "/api/webparser/parse",
-    WEBPARSER_SITEMAP: "/api/webparser/sitemap"
+    WEBPARSER_SITEMAP: "/api/webparser/sitemap",
+    // ===== NEW ENDPOINTS (v1.0.0 - API v17) =====
+    // DuckDuckGo
+    DUCKDUCKGO_SEARCH: "/api/duckduckgo/search",
+    // YouTube
+    YOUTUBE_SEARCH_VIDEOS: "/api/youtube/search/videos",
+    YOUTUBE_VIDEO: "/api/youtube/video",
+    YOUTUBE_VIDEO_SUBTITLES: "/api/youtube/video/subtitles",
+    // SEC
+    SEC_SEARCH_COMPANIES: "/api/sec/search/companies",
+    SEC_DOCUMENT: "/api/sec/document",
+    // Y Combinator
+    YC_COMPANY: "/api/yc/company",
+    YC_SEARCH_COMPANIES: "/api/yc/search/companies",
+    YC_SEARCH_FOUNDERS: "/api/yc/search/founders",
+    // Reddit User
+    REDDIT_USER_POSTS: "/api/reddit/user/posts",
+    REDDIT_USER_COMMENTS: "/api/reddit/user/comments",
+    // LinkedIn User Details
+    LINKEDIN_USER_EDUCATION: "/api/linkedin/user/education",
+    LINKEDIN_USER_EXPERIENCE: "/api/linkedin/user/experience",
+    LINKEDIN_USER_SKILLS: "/api/linkedin/user/skills",
+    LINKEDIN_USER_HONORS: "/api/linkedin/user/honors",
+    LINKEDIN_USER_PATENTS: "/api/linkedin/user/patents",
+    LINKEDIN_USER_LANGUAGES: "/api/linkedin/user/languages",
+    // LinkedIn Search Extensions
+    LINKEDIN_SEARCH_EDUCATIONS: "/api/linkedin/search/educations",
+    LINKEDIN_SEARCH_LOCATIONS: "/api/linkedin/search/locations",
+    LINKEDIN_SEARCH_INDUSTRIES: "/api/linkedin/search/industries",
+    LINKEDIN_SEARCH_JOBS: "/api/linkedin/search/jobs",
+    LINKEDIN_SEARCH_COMPANIES: "/api/linkedin/search/companies",
+    // LinkedIn Company & Management
+    LINKEDIN_COMPANY_EMPLOYEE_STATS: "/api/linkedin/company/employee_stats",
+    LINKEDIN_MANAGEMENT_COMPANY_MENTIONS: "/api/linkedin/management/company/mentions",
+    LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64: "/api/linkedin/management/chat/attachment/base64",
+    // LinkedIn Groups
+    LINKEDIN_GROUP: "/api/linkedin/group"
   }
 };
 
@@ -248,47 +282,6 @@ export default function createServer({ config }: { config: z.infer<typeof config
             {
               type: "text",
               text: `LinkedIn API error: ${formatError(error)}`
-            }
-          ],
-          isError: true
-        };
-      }
-    }
-  );
-
-  // Register google_search tool
-  server.tool(
-    "google_search",
-    "Perform Google search",
-    {
-      query: z.string().describe("Search query"),
-      count: z.number().default(10).describe("Max results (1-20)"),
-      timeout: z.number().default(300).describe("Timeout in seconds")
-    },
-    async ({ query, count, timeout }) => {
-      const requestData = {
-        timeout,
-        query,
-        count: Math.min(Math.max(1, count), 20)
-      };
-      log(`Starting Google search for: ${query}`);
-      try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.GOOGLE_SEARCH, requestData);
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(response, null, 2)
-            }
-          ]
-        };
-      } catch (error) {
-        log("Google search error:", error);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Google search API error: ${formatError(error)}`
             }
           ],
           isError: true
@@ -1401,27 +1394,6 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
-  server.tool(
-    "get_twitter_post",
-    "Get Twitter/X post details",
-    {
-      post_url: z.string().describe("Twitter post URL"),
-      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
-    },
-    async ({ post_url, timeout }) => {
-      const requestData = { timeout, post_url };
-      log(`Starting Twitter post lookup for: ${post_url}`);
-      try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_POST, requestData);
-        log(`Twitter post lookup complete`);
-        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
-      } catch (error) {
-        log("Twitter post lookup error:", error);
-        return { content: [{ type: "text", text: `Twitter post API error: ${formatError(error)}` }], isError: true };
-      }
-    }
-  );
-
   // ===== WEB PARSER TOOLS =====
 
   server.tool(
@@ -1483,53 +1455,667 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
-  // ===== CHATGPT DEEP RESEARCH TOOLS =====
+  // ========================================
+  // NEW TOOLS (v1.0.0 - API v17)
+  // ========================================
+
+  // ===== DUCKDUCKGO TOOLS =====
 
   server.tool(
-    "search",
-    "Search tool optimized for ChatGPT Deep Research mode",
+    "duckduckgo_search",
+    "Search DuckDuckGo for web results",
     {
       query: z.string().describe("Search query"),
-      count: z.number().default(10).describe("Max results to return"),
+      count: z.number().default(10).describe("Max results (1-20)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count: Math.min(Math.max(1, count), 20) };
+      log(`Starting DuckDuckGo search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.DUCKDUCKGO_SEARCH, requestData);
+        log(`DuckDuckGo search complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("DuckDuckGo search error:", error);
+        return { content: [{ type: "text", text: `DuckDuckGo search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== YOUTUBE TOOLS =====
+
+  server.tool(
+    "search_youtube_videos",
+    "Search YouTube videos by query",
+    {
+      query: z.string().describe("Search query"),
+      count: z.number().default(10).describe("Max results"),
       timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
     },
     async ({ query, count, timeout }) => {
       const requestData = { timeout, query, count };
-      log(`Starting ChatGPT Deep Research search for: ${query}`);
+      log(`Starting YouTube videos search for: ${query}`);
       try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.SEARCH_USERS, requestData);
-        log(`Search complete`);
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_SEARCH_VIDEOS, requestData);
+        log(`YouTube videos search complete, found ${response.length || 0} results`);
         return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
       } catch (error) {
-        log("Search error:", error);
-        return { content: [{ type: "text", text: `Search API error: ${formatError(error)}` }], isError: true };
+        log("YouTube videos search error:", error);
+        return { content: [{ type: "text", text: `YouTube videos search API error: ${formatError(error)}` }], isError: true };
       }
     }
   );
 
   server.tool(
-    "fetch",
-    "Fetch tool optimized for ChatGPT Deep Research mode - retrieves complete LinkedIn profile information",
+    "get_youtube_video",
+    "Get detailed YouTube video information by ID or URL",
     {
-      id: z.string().describe("LinkedIn profile URL or username to fetch"),
+      video: z.string().describe("Video ID or URL (e.g., 'dQw4w9WgXcQ' or full YouTube URL)"),
       timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
     },
-    async ({ id, timeout }) => {
-      const requestData = { timeout, user: id, with_experience: true, with_education: true, with_skills: true };
-      log(`Starting ChatGPT Deep Research fetch for: ${id}`);
+    async ({ video, timeout }) => {
+      const requestData = { timeout, video };
+      log(`Starting YouTube video lookup for: ${video}`);
       try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.USER_PROFILE, requestData);
-        log(`Fetch complete`);
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_VIDEO, requestData);
+        log(`YouTube video lookup complete`);
         return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
       } catch (error) {
-        log("Fetch error:", error);
-        return { content: [{ type: "text", text: `Fetch API error: ${formatError(error)}` }], isError: true };
+        log("YouTube video lookup error:", error);
+        return { content: [{ type: "text", text: `YouTube video API error: ${formatError(error)}` }], isError: true };
       }
     }
   );
 
-  log("AnySite MCP Server initialized with 57 tools");
-  log("Management tools (chat, connections, posting) require ACCOUNT_ID");
+  server.tool(
+    "get_youtube_video_subtitles",
+    "Extract YouTube video subtitles/captions with timestamps",
+    {
+      video: z.string().describe("Video ID or URL"),
+      language: z.string().optional().describe("Language code (e.g., 'en', 'ru'). Auto-detect if not specified"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ video, language, timeout }) => {
+      const requestData: any = { timeout, video };
+      if (language) requestData.language = language;
+      log(`Starting YouTube video subtitles extraction for: ${video}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_VIDEO_SUBTITLES, requestData);
+        log(`YouTube video subtitles extraction complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("YouTube video subtitles extraction error:", error);
+        return { content: [{ type: "text", text: `YouTube video subtitles API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== SEC TOOLS =====
+
+  server.tool(
+    "search_sec_companies",
+    "Search SEC EDGAR database for company filings with advanced filters",
+    {
+      entity_name: z.string().optional().describe("Company name or ticker (e.g., 'apple', 'AAPL')"),
+      forms: z.array(z.string()).optional().describe("Form types filter (e.g., ['10-K', '10-Q'] or exclusions ['-3', '-4'])"),
+      location_codes: z.array(z.string()).optional().describe("State codes (e.g., ['CA', 'NY'])"),
+      date_from: z.string().optional().describe("Start date (YYYY-MM-DD format)"),
+      date_to: z.string().optional().describe("End date (YYYY-MM-DD format)"),
+      count: z.number().describe("Max results (max 100)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ entity_name, forms, location_codes, date_from, date_to, count, timeout }) => {
+      const requestData: any = { timeout, count };
+      if (entity_name) requestData.entity_name = entity_name;
+      if (forms) requestData.forms = forms;
+      if (location_codes) requestData.location_codes = location_codes;
+      if (date_from) requestData.date_from = date_from;
+      if (date_to) requestData.date_to = date_to;
+      log(`Starting SEC companies search with filters`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.SEC_SEARCH_COMPANIES, requestData);
+        log(`SEC companies search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("SEC companies search error:", error);
+        return { content: [{ type: "text", text: `SEC companies search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_sec_document",
+    "Retrieve full SEC document content by URL",
+    {
+      document_url: z.string().describe("SEC EDGAR document URL (e.g., 'https://www.sec.gov/Archives/edgar/data/...')"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ document_url, timeout }) => {
+      const requestData = { timeout, document_url };
+      log(`Starting SEC document retrieval for: ${document_url}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.SEC_DOCUMENT, requestData);
+        log(`SEC document retrieval complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("SEC document retrieval error:", error);
+        return { content: [{ type: "text", text: `SEC document API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== Y COMBINATOR TOOLS =====
+
+  server.tool(
+    "get_yc_company",
+    "Get comprehensive Y Combinator company information by slug",
+    {
+      company: z.string().describe("YC company slug (e.g., 'airbnb', 'stripe', 'openai')"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ company, timeout }) => {
+      const requestData = { timeout, company };
+      log(`Starting YC company lookup for: ${company}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_COMPANY, requestData);
+        log(`YC company lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("YC company lookup error:", error);
+        return { content: [{ type: "text", text: `YC company API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_yc_companies",
+    "Search Y Combinator companies with advanced filters",
+    {
+      query: z.string().optional().describe("Search query for company name"),
+      industries: z.array(z.string()).optional().describe("Filter by industries (e.g., ['Healthcare', 'B2B'])"),
+      regions: z.array(z.string()).optional().describe("Filter by regions (e.g., ['Latin America', 'Europe'])"),
+      batches: z.array(z.string()).optional().describe("Filter by batches (e.g., ['Winter 2026', 'Summer 2025'])"),
+      is_hiring: z.boolean().optional().describe("Filter by hiring status"),
+      nonprofit: z.boolean().optional().describe("Filter by nonprofit status"),
+      top_company: z.boolean().optional().describe("Filter by top company status"),
+      team_size_min: z.number().optional().describe("Minimum team size"),
+      team_size_max: z.number().optional().describe("Maximum team size (max 10000)"),
+      count: z.number().describe("Max results"),
+      sort_by: z.enum(["relevance", "launch_date"]).default("relevance").describe("Sort order"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, industries, regions, batches, is_hiring, nonprofit, top_company, team_size_min, team_size_max, count, sort_by, timeout }) => {
+      const requestData: any = { timeout, count, sort_by };
+      if (query) requestData.query = query;
+      if (industries) requestData.industries = industries;
+      if (regions) requestData.regions = regions;
+      if (batches) requestData.batches = batches;
+      if (is_hiring !== undefined) requestData.is_hiring = is_hiring;
+      if (nonprofit !== undefined) requestData.nonprofit = nonprofit;
+      if (top_company !== undefined) requestData.top_company = top_company;
+      if (team_size_min !== undefined) requestData.team_size_min = team_size_min;
+      if (team_size_max !== undefined) requestData.team_size_max = team_size_max;
+      log(`Starting YC companies search with filters`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_SEARCH_COMPANIES, requestData);
+        log(`YC companies search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("YC companies search error:", error);
+        return { content: [{ type: "text", text: `YC companies search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_yc_founders",
+    "Search Y Combinator founders with filters",
+    {
+      query: z.string().optional().describe("Search query for founder name or company"),
+      industries: z.array(z.string()).optional().describe("Filter by industries (e.g., ['Education', 'Fintech'])"),
+      titles: z.array(z.string()).optional().describe("Filter by titles (e.g., ['CEO', 'Founder', 'CTO'])"),
+      batches: z.array(z.string()).optional().describe("Filter by YC batches (e.g., ['W25', 'S25', 'F25'])"),
+      top_company: z.boolean().optional().describe("Filter by top company status"),
+      count: z.number().describe("Max results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, industries, titles, batches, top_company, count, timeout }) => {
+      const requestData: any = { timeout, count };
+      if (query) requestData.query = query;
+      if (industries) requestData.industries = industries;
+      if (titles) requestData.titles = titles;
+      if (batches) requestData.batches = batches;
+      if (top_company !== undefined) requestData.top_company = top_company;
+      log(`Starting YC founders search with filters`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_SEARCH_FOUNDERS, requestData);
+        log(`YC founders search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("YC founders search error:", error);
+        return { content: [{ type: "text", text: `YC founders search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== REDDIT USER TOOLS =====
+
+  server.tool(
+    "get_reddit_user_posts",
+    "Get posts from a Reddit user",
+    {
+      username: z.string().describe("Reddit username (without u/ prefix, e.g., 'Confident_Rough_2846')"),
+      count: z.number().default(25).describe("Max posts to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ username, count, timeout }) => {
+      const requestData = { timeout, username, count };
+      log(`Starting Reddit user posts lookup for: u/${username}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.REDDIT_USER_POSTS, requestData);
+        log(`Reddit user posts lookup complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Reddit user posts lookup error:", error);
+        return { content: [{ type: "text", text: `Reddit user posts API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_reddit_user_comments",
+    "Get comments from a Reddit user",
+    {
+      username: z.string().describe("Reddit username (without u/ prefix, e.g., 'Confident_Rough_2846')"),
+      count: z.number().default(25).describe("Max comments to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ username, count, timeout }) => {
+      const requestData = { timeout, username, count };
+      log(`Starting Reddit user comments lookup for: u/${username}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.REDDIT_USER_COMMENTS, requestData);
+        log(`Reddit user comments lookup complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("Reddit user comments lookup error:", error);
+        return { content: [{ type: "text", text: `Reddit user comments API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== LINKEDIN USER DETAILS TOOLS =====
+
+  server.tool(
+    "get_linkedin_user_education",
+    "Get LinkedIn user education history by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user education lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EDUCATION, requestData);
+        log(`LinkedIn user education lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user education lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user education API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_experience",
+    "Get LinkedIn user work experience by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user experience lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EXPERIENCE, requestData);
+        log(`LinkedIn user experience lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user experience lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user experience API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_skills",
+    "Get LinkedIn user skills by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user skills lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_SKILLS, requestData);
+        log(`LinkedIn user skills lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user skills lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user skills API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_honors",
+    "Get LinkedIn user honors and awards by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user honors lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_HONORS, requestData);
+        log(`LinkedIn user honors lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user honors lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user honors API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_patents",
+    "Get LinkedIn user patents by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user patents lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_PATENTS, requestData);
+        log(`LinkedIn user patents lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user patents lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user patents API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_user_languages",
+    "Get LinkedIn user language proficiencies by URN",
+    {
+      urn: z.string().describe("User URN (must include prefix, example: fsd_profile:ACoAA...)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ urn, timeout }) => {
+      const normalizedURN = normalizeUserURN(urn);
+      if (!isValidUserURN(normalizedURN)) {
+        return { content: [{ type: "text", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+      }
+      const requestData = { timeout, urn: normalizedURN };
+      log(`Starting LinkedIn user languages lookup for: ${normalizedURN}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_LANGUAGES, requestData);
+        log(`LinkedIn user languages lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn user languages lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn user languages API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== LINKEDIN SEARCH EXTENSIONS =====
+
+  server.tool(
+    "search_linkedin_educations",
+    "Search educational institutions for LinkedIn filtering",
+    {
+      query: z.string().describe("Search query for educational institutions (e.g., 'Harvard', 'MIT')"),
+      count: z.number().default(10).describe("Max results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count };
+      log(`Starting LinkedIn educations search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_EDUCATIONS, requestData);
+        log(`LinkedIn educations search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn educations search error:", error);
+        return { content: [{ type: "text", text: `LinkedIn educations search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_linkedin_locations",
+    "Search locations for LinkedIn filtering",
+    {
+      query: z.string().describe("Search query for location (e.g., 'Tokyo', 'San Francisco')"),
+      count: z.number().default(10).describe("Max results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count };
+      log(`Starting LinkedIn locations search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_LOCATIONS, requestData);
+        log(`LinkedIn locations search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn locations search error:", error);
+        return { content: [{ type: "text", text: `LinkedIn locations search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_linkedin_industries",
+    "Search industries for LinkedIn filtering",
+    {
+      query: z.string().describe("Search query for industry (e.g., 'IT', 'Healthcare')"),
+      count: z.number().default(10).describe("Max results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ query, count, timeout }) => {
+      const requestData = { timeout, query, count };
+      log(`Starting LinkedIn industries search for: ${query}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_INDUSTRIES, requestData);
+        log(`LinkedIn industries search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn industries search error:", error);
+        return { content: [{ type: "text", text: `LinkedIn industries search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_linkedin_jobs",
+    "Search LinkedIn job postings with advanced filters",
+    {
+      keywords: z.string().optional().describe("Job search keywords"),
+      location: z.string().optional().describe("Job location (default: 'worldwide')"),
+      sort: z.enum(["recent", "relevant"]).optional().describe("Sort order"),
+      experience_level: z.array(z.string()).optional().describe("Experience levels: internship, entry_level, associate, mid_senior, director, executive"),
+      job_types: z.array(z.string()).optional().describe("Job types: full_time, part_time, contract, temporary, internship, other"),
+      work_types: z.array(z.string()).optional().describe("Work types: hybrid, remote, on_site"),
+      industry: z.union([z.string(), z.array(z.string())]).optional().describe("Industry URN or keyword"),
+      company: z.array(z.string()).optional().describe("Company URNs"),
+      count: z.number().describe("Max results (max 1000)"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ keywords, location, sort, experience_level, job_types, work_types, industry, company, count, timeout }) => {
+      const requestData: any = { timeout, count };
+      if (keywords) requestData.keywords = keywords;
+      if (location) requestData.location = location;
+      if (sort) requestData.sort = sort;
+      if (experience_level) requestData.experience_level = experience_level;
+      if (job_types) requestData.job_types = job_types;
+      if (work_types) requestData.work_types = work_types;
+      if (industry) requestData.industry = industry;
+      if (company) requestData.company = company;
+      log(`Starting LinkedIn jobs search with filters`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_JOBS, requestData);
+        log(`LinkedIn jobs search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn jobs search error:", error);
+        return { content: [{ type: "text", text: `LinkedIn jobs search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "search_linkedin_companies",
+    "Search LinkedIn companies by keywords",
+    {
+      keywords: z.string().optional().describe("Company search keywords"),
+      count: z.number().describe("Max results"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ keywords, count, timeout }) => {
+      const requestData: any = { timeout, count };
+      if (keywords) requestData.keywords = keywords;
+      log(`Starting LinkedIn companies search`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_COMPANIES, requestData);
+        log(`LinkedIn companies search complete, found ${response.length || 0} results`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn companies search error:", error);
+        return { content: [{ type: "text", text: `LinkedIn companies search API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== LINKEDIN COMPANY & MANAGEMENT EXTENSIONS =====
+
+  server.tool(
+    "get_linkedin_company_employee_stats",
+    "Get LinkedIn company employee statistics",
+    {
+      company: z.string().describe("Company URN or URL"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ company, timeout }) => {
+      const requestData = { timeout, company };
+      log(`Starting LinkedIn company employee stats lookup for: ${company}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_COMPANY_EMPLOYEE_STATS, requestData);
+        log(`LinkedIn company employee stats lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn company employee stats lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn company employee stats API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_management_company_mentions",
+    "Track company mentions on LinkedIn (requires ACCOUNT_ID)",
+    {
+      company: z.string().describe("Company URN or alias"),
+      count: z.number().default(10).describe("Max mentions to return"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ company, count, timeout }) => {
+      const requestData: any = { timeout, company, count, account_id: ACCOUNT_ID };
+      log(`Starting LinkedIn company mentions lookup for: ${company}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_COMPANY_MENTIONS, requestData);
+        log(`LinkedIn company mentions lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn company mentions lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn company mentions API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "get_linkedin_chat_attachment_base64",
+    "Download LinkedIn chat attachment as base64 (requires ACCOUNT_ID)",
+    {
+      attachment_url: z.string().describe("Attachment URL from chat messages"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ attachment_url, timeout }) => {
+      const requestData: any = { timeout, attachment_url, account_id: ACCOUNT_ID };
+      log(`Starting LinkedIn chat attachment download for: ${attachment_url}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64, requestData);
+        log(`LinkedIn chat attachment download complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn chat attachment download error:", error);
+        return { content: [{ type: "text", text: `LinkedIn chat attachment API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  // ===== LINKEDIN GROUP TOOLS =====
+
+  server.tool(
+    "get_linkedin_group",
+    "Get LinkedIn group information",
+    {
+      group: z.string().describe("Group URL or URN (e.g., '3990648')"),
+      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
+    },
+    async ({ group, timeout }) => {
+      const requestData = { timeout, group };
+      log(`Starting LinkedIn group lookup for: ${group}`);
+      try {
+        const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_GROUP, requestData);
+        log(`LinkedIn group lookup complete`);
+        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
+      } catch (error) {
+        log("LinkedIn group lookup error:", error);
+        return { content: [{ type: "text", text: `LinkedIn group API error: ${formatError(error)}` }], isError: true };
+      }
+    }
+  );
+
+  log("AnySite MCP Server initialized with 69 tools");
+  log("Management tools (chat, connections, posting, company mentions, attachments) require ACCOUNT_ID");
 
   return server;
 }

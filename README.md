@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="icon.png" alt="AnySite MCP Server Logo" width="200" />
+<img src="icon.png" alt="Anysite MCP Server Logo" width="200" />
 
-# 🌐 AnySite MCP Server
+# 🌐 Anysite MCP Server
 
 **Agent-First Web Scraping Infrastructure via Model Context Protocol**
 
@@ -21,7 +21,7 @@ Connect your AI agents to real-time data from LinkedIn, Instagram, Reddit, Twitt
 
 ## 💎 MCP Unlimited Plan
 
-**Unlimited access to all 65+ AnySite MCP tools for just $30/month** - perfect for AI agents and automation.
+**Unlimited access to all 65+ Anysite MCP tools for just $30/month** - perfect for AI agents and automation.
 
 Get unlimited requests through Remote MCP Server with no request limits. Ideal for Claude Desktop, Cursor, n8n, and any MCP-compatible client.
 
@@ -33,9 +33,9 @@ Get unlimited requests through Remote MCP Server with no request limits. Ideal f
 
 ---
 
-## 🎯 What is AnySite MCP Server?
+## 🎯 What is Anysite MCP Server?
 
-AnySite MCP Server is a **Model Context Protocol (MCP)** implementation that gives AI agents direct access to web data through platform-specific APIs. Unlike traditional web scrapers, AnySite provides:
+Anysite MCP Server is a **Model Context Protocol (MCP)** implementation that gives AI agents direct access to web data through platform-specific APIs. Unlike traditional web scrapers, Anysite provides:
 
 - **🔒 OAuth Authentication** - Secure, one-click connection for Claude Desktop and other MCP clients
 - **🌐 Multi-Platform Support** - LinkedIn, Instagram, Reddit, Twitter, and custom web parsing
@@ -144,9 +144,10 @@ Expected response should include:
 - `get_linkedin_profile`
 - `get_instagram_user`
 - `search_reddit_posts`
-- `google_search`
+- `duckduckgo_search`
+- `search_youtube_videos`
 - `parse_webpage`
-- ... and **50+ more tools**
+- ... and **65+ more tools**
 
 ---
 
@@ -285,40 +286,60 @@ sorted by top engagement
 </details>
 
 <details>
-<summary><b>LinkedIn Tools (24 tools)</b></summary>
+<summary><b>LinkedIn Tools (35 tools)</b></summary>
 
-**Search & Discovery (6 tools)**
+**Search & Discovery (11 tools)**
 - `search_linkedin_users` - Advanced user search with 10+ filters
+- `linkedin_sales_navigator_search_users` - Sales Navigator advanced search
 - `search_linkedin_companies` - Search companies with advanced filters
-- `search_linkedin_educations` - Search educational institutions
+- `search_linkedin_educations` - Search educational institutions for filtering
 - `search_linkedin_industries` - Search industries for filtering
 - `search_linkedin_locations` - Search locations for filtering
 - `search_linkedin_jobs` - Search job postings with filters
-
-**User Profiles (6 tools)**
-- `get_linkedin_profile` - Full profile with experience, education, skills
 - `find_linkedin_user_email` - Find users by email address
 - `get_linkedin_user_email_db` - Get email from internal database (up to 10 profiles)
+- `get_linkedin_google_company` - Find companies via Google search
+- `get_linkedin_company` - Company details lookup
+
+**User Profiles & Details (12 tools)**
+- `get_linkedin_profile` - Full profile with experience, education, skills
 - `get_linkedin_user_posts` - User's post history
 - `get_linkedin_user_comments` - User's comment history
 - `get_linkedin_user_reactions` - Posts user reacted to
+- `get_linkedin_user_endorsers` - Skill endorsers
+- `get_linkedin_user_certificates` - Professional certificates
+- `get_linkedin_user_education` - Education history
+- `get_linkedin_user_experience` - Work experience details
+- `get_linkedin_user_skills` - Skills and endorsements
+- `get_linkedin_user_honors` - Awards and honors
+- `get_linkedin_user_patents` - Patent information
+- `get_linkedin_user_languages` - Language proficiencies
 
 **Company Information (4 tools)**
-- `get_linkedin_company` - Company details lookup
 - `get_linkedin_company_employee_stats` - Employee statistics
 - `get_linkedin_company_employees` - Employee list with filters
 - `get_linkedin_company_posts` - Company updates
+- `get_linkedin_management_company_mentions` - Track company mentions (requires ACCOUNT_ID)
 
-**Content & Posts (6 tools)**
+**Content & Posts (4 tools)**
 - `search_linkedin_posts` - Search posts by keywords, author, date
-- `get_linkedin_post` - Get detailed post information
 - `get_linkedin_post_comments` - Comment threads
 - `get_linkedin_post_reactions` - Who reacted and how
 - `get_linkedin_post_reposts` - Reshare analysis
 
-**Jobs & Groups (2 tools)**
-- `search_linkedin_jobs` - Job search with filters (already listed in Search)
-- `get_linkedin_group` - Get group information
+**Management & Actions (3 tools)** - Require ACCOUNT_ID
+- `get_linkedin_management_me` - Your account profile
+- `send_linkedin_chat_message` - Send direct messages
+- `get_linkedin_chat_messages` - Get conversation history
+- `get_linkedin_chat_attachment_base64` - Download chat attachments
+- `send_linkedin_connection_request` - Connect with users
+- `send_linkedin_post_comment` - Comment on posts
+- `send_linkedin_post` - Create new posts
+- `get_linkedin_conversations` - Get all conversations
+- `get_linkedin_user_connections` - Get connections list
+
+**Groups (1 tool)**
+- `get_linkedin_group` - Get group information and members
 
 </details>
 
@@ -337,22 +358,23 @@ sorted by top engagement
 </details>
 
 <details>
-<summary><b>Twitter/X Tools (5 tools)</b></summary>
+<summary><b>Twitter/X Tools (4 tools)</b></summary>
 
 - `get_twitter_user` - Profile details
 - `search_twitter_users` - Find users
 - `get_twitter_user_posts` - Tweet history
 - `search_twitter_posts` - Advanced tweet search with 15+ filters
-- `get_twitter_post` - Tweet details
 
 </details>
 
 <details>
-<summary><b>Reddit Tools (3 tools)</b></summary>
+<summary><b>Reddit Tools (5 tools)</b></summary>
 
 - `search_reddit_posts` - Search with sort, time, subreddit filters
-- `get_reddit_post` - Post details with score, comments
+- `get_reddit_posts` - Post details with score, comments
 - `get_reddit_post_comments` - Comment trees with nested replies
+- `get_reddit_user_posts` - Get posts from a specific Reddit user
+- `get_reddit_user_comments` - Get comments from a specific Reddit user
 
 </details>
 
@@ -585,9 +607,9 @@ Special thanks to the MCP community for feedback and contributions.
 
 <div align="center">
 
-**⭐ Star us on GitHub if AnySite MCP Server helps your AI agents!**
+**⭐ Star us on GitHub if Anysite MCP Server helps your AI agents!**
 
-Made with ❤️ by the [AnySite.io](https://anysite.io) team
+Made with ❤️ by the [Anysite.io](https://anysite.io) team
 
 [Website](https://anysite.io) • [Documentation](https://docs.anysite.io) • [API Playground](https://app.anysite.io)
 
