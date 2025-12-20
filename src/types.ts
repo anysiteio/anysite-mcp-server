@@ -154,12 +154,6 @@ export interface LinkedinManagementConversationsPayload {
   timeout?: number;
 }
 
-export interface GoogleSearchPayload {
-  query: string;
-  count?: number;
-  timeout?: number;
-}
-
 export interface LinkedinSearchPostsArgs {
   timeout?: number;
   keywords?: string;
@@ -823,19 +817,6 @@ export function isValidLinkedinManagementConversationsArgs(
   return true;
 }
 
-export function isValidGoogleSearchPayload(
-  args: unknown
-): args is GoogleSearchPayload {
-  if (typeof args !== "object" || args === null) return false;
-  const obj = args as Record<string, unknown>;
-
-  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
-  if (obj.count !== undefined && (typeof obj.count !== "number" || obj.count <= 0 || obj.count > 20)) return false;
-  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
-
-  return true;
-}
-
 export function isValidLinkedinSearchPostsArgs(
   args: unknown
 ): args is LinkedinSearchPostsArgs {
@@ -1069,11 +1050,6 @@ export interface TwitterSearchPostsArgs {
   timeout?: number;
 }
 
-export interface TwitterPostArgs {
-  post_url: string; // Twitter post URL
-  timeout?: number;
-}
-
 // Web Parser types
 export interface WebParserParseArgs {
   url: string; // URL of the page to parse
@@ -1252,16 +1228,6 @@ export function isValidTwitterSearchPostsArgs(
   return true;
 }
 
-export function isValidTwitterPostArgs(
-  args: unknown
-): args is TwitterPostArgs {
-  if (typeof args !== "object" || args === null) return false;
-  const obj = args as Record<string, unknown>;
-  if (typeof obj.post_url !== "string" || !obj.post_url.trim()) return false;
-  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
-  return true;
-}
-
 // Web Parser validations
 export function isValidWebParserParseArgs(
   args: unknown
@@ -1313,6 +1279,498 @@ export function isValidChatGPTFetchArgs(
   if (typeof args !== "object" || args === null) return false;
   const obj = args as Record<string, unknown>;
   if (typeof obj.id !== "string" || !obj.id.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ========================================
+// NEW ENDPOINTS (v1.0.0 - API v17)
+// ========================================
+
+// ===== DUCKDUCKGO TYPES =====
+export interface DuckDuckGoSearchArgs {
+  query: string;
+  count?: number; // 1-20
+  timeout?: number; // 20-1500
+}
+
+// ===== YOUTUBE TYPES =====
+export interface YoutubeSearchVideosArgs {
+  query: string;
+  count: number;
+  timeout?: number; // 20-1500
+}
+
+export interface YoutubeVideoArgs {
+  video: string; // Video ID or URL
+  timeout?: number; // 20-1500
+}
+
+export interface YoutubeVideoSubtitlesArgs {
+  video: string; // Video ID or URL
+  language?: string; // Language code (e.g., "en", "ru")
+  timeout?: number; // 20-1500
+}
+
+// ===== SEC TYPES =====
+export interface SecSearchCompaniesArgs {
+  entity_name?: string; // Company name or ticker
+  forms?: string[]; // Form types (e.g., ["10-K", "10-Q"] or exclusions ["-3", "-4"])
+  location_codes?: string[]; // State codes (e.g., ["CA", "NY"])
+  date_from?: string; // YYYY-MM-DD
+  date_to?: string; // YYYY-MM-DD
+  count: number;
+  timeout?: number; // 20-1500
+}
+
+export interface SecDocumentArgs {
+  document_url: string; // SEC EDGAR document URL
+  timeout?: number; // 20-1500
+}
+
+// ===== Y COMBINATOR TYPES =====
+export interface YcCompanyArgs {
+  company: string; // Company slug (e.g., "airbnb", "stripe")
+  timeout?: number; // 20-1500
+}
+
+export interface YcSearchCompaniesArgs {
+  query?: string;
+  industries?: string[]; // e.g., ["Healthcare", "B2B"]
+  regions?: string[]; // e.g., ["Latin America", "Europe"]
+  batches?: string[]; // e.g., ["Winter 2026", "Summer 2025"]
+  is_hiring?: boolean;
+  nonprofit?: boolean;
+  top_company?: boolean;
+  team_size_min?: number;
+  team_size_max?: number; // max 10000
+  count: number;
+  sort_by?: "relevance" | "launch_date"; // default: "relevance"
+  timeout?: number; // 20-1500
+}
+
+export interface YcSearchFoundersArgs {
+  query?: string; // Founder name
+  industries?: string[]; // e.g., ["Education", "Fintech"]
+  titles?: string[]; // e.g., ["CEO", "Founder", "CTO"]
+  batches?: string[]; // e.g., ["W25", "S25", "F25"]
+  top_company?: boolean;
+  count: number;
+  timeout?: number; // 20-1500
+}
+
+// ===== REDDIT USER TYPES =====
+export interface RedditUserPostsArgs {
+  username: string; // Reddit username (without u/)
+  count?: number; // default: 25
+  timeout?: number; // 20-1500
+}
+
+export interface RedditUserCommentsArgs {
+  username: string; // Reddit username (without u/)
+  count?: number; // default: 25
+  timeout?: number; // 20-1500
+}
+
+// ===== LINKEDIN USER DETAILS TYPES =====
+export interface LinkedinUserEducationArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinUserExperienceArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinUserSkillsArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinUserHonorsArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinUserPatentsArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinUserLanguagesArgs {
+  urn: string; // User URN with fsd_profile: prefix
+  timeout?: number; // 20-1500
+}
+
+// ===== LINKEDIN SEARCH EXTENSIONS TYPES =====
+export interface LinkedinSearchEducationsArgs {
+  query: string; // Educational institution name
+  count?: number;
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinSearchLocationsArgs {
+  query: string; // Location name
+  count?: number;
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinSearchIndustriesArgs {
+  query: string; // Industry name
+  count?: number;
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinSearchJobsArgs {
+  keywords?: string;
+  location?: string; // default: "worldwide"
+  sort?: "recent" | "relevant";
+  experience_level?: string[]; // internship, entry_level, associate, mid_senior, director, executive
+  job_types?: string[]; // full_time, part_time, contract, temporary, internship, other
+  work_types?: string[]; // hybrid, remote, on_site
+  industry?: string | string[]; // Industry URN or keyword
+  company?: string[]; // Company URN
+  count: number; // max 1000
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinSearchCompaniesArgs {
+  keywords?: string;
+  count: number;
+  timeout?: number; // 20-1500
+}
+
+// ===== LINKEDIN COMPANY & MANAGEMENT TYPES =====
+export interface LinkedinCompanyEmployeeStatsArgs {
+  company: string; // Company URN or URL
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinManagementCompanyMentionsArgs {
+  company: string; // Company URN or alias
+  count?: number;
+  timeout?: number; // 20-1500
+}
+
+export interface LinkedinManagementChatAttachmentBase64Args {
+  attachment_url: string; // Attachment URL from chat messages
+  timeout?: number; // 20-1500
+}
+
+// ===== LINKEDIN GROUP TYPES =====
+export interface LinkedinGroupArgs {
+  group: string; // Group URL or URN
+  timeout?: number; // 20-1500
+}
+
+// ========================================
+// VALIDATION FUNCTIONS (v1.0.0 - API v17)
+// ========================================
+
+// ===== DUCKDUCKGO VALIDATIONS =====
+export function isValidDuckDuckGoSearchArgs(
+  args: unknown
+): args is DuckDuckGoSearchArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (obj.count !== undefined && (typeof obj.count !== "number" || obj.count < 1 || obj.count > 20)) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== YOUTUBE VALIDATIONS =====
+export function isValidYoutubeSearchVideosArgs(
+  args: unknown
+): args is YoutubeSearchVideosArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidYoutubeVideoArgs(
+  args: unknown
+): args is YoutubeVideoArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.video !== "string" || !obj.video.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidYoutubeVideoSubtitlesArgs(
+  args: unknown
+): args is YoutubeVideoSubtitlesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.video !== "string" || !obj.video.trim()) return false;
+  if (obj.language !== undefined && typeof obj.language !== "string") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== SEC VALIDATIONS =====
+export function isValidSecSearchCompaniesArgs(
+  args: unknown
+): args is SecSearchCompaniesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.entity_name !== undefined && typeof obj.entity_name !== "string") return false;
+  if (obj.forms !== undefined && !Array.isArray(obj.forms)) return false;
+  if (obj.location_codes !== undefined && !Array.isArray(obj.location_codes)) return false;
+  if (obj.date_from !== undefined && typeof obj.date_from !== "string") return false;
+  if (obj.date_to !== undefined && typeof obj.date_to !== "string") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidSecDocumentArgs(
+  args: unknown
+): args is SecDocumentArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.document_url !== "string" || !obj.document_url.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== Y COMBINATOR VALIDATIONS =====
+export function isValidYcCompanyArgs(
+  args: unknown
+): args is YcCompanyArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.company !== "string" || !obj.company.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidYcSearchCompaniesArgs(
+  args: unknown
+): args is YcSearchCompaniesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.query !== undefined && typeof obj.query !== "string") return false;
+  if (obj.industries !== undefined && !Array.isArray(obj.industries)) return false;
+  if (obj.regions !== undefined && !Array.isArray(obj.regions)) return false;
+  if (obj.batches !== undefined && !Array.isArray(obj.batches)) return false;
+  if (obj.is_hiring !== undefined && typeof obj.is_hiring !== "boolean") return false;
+  if (obj.nonprofit !== undefined && typeof obj.nonprofit !== "boolean") return false;
+  if (obj.top_company !== undefined && typeof obj.top_company !== "boolean") return false;
+  if (obj.team_size_min !== undefined && typeof obj.team_size_min !== "number") return false;
+  if (obj.team_size_max !== undefined && (typeof obj.team_size_max !== "number" || obj.team_size_max > 10000)) return false;
+  if (obj.sort_by !== undefined && obj.sort_by !== "relevance" && obj.sort_by !== "launch_date") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidYcSearchFoundersArgs(
+  args: unknown
+): args is YcSearchFoundersArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.query !== undefined && typeof obj.query !== "string") return false;
+  if (obj.industries !== undefined && !Array.isArray(obj.industries)) return false;
+  if (obj.titles !== undefined && !Array.isArray(obj.titles)) return false;
+  if (obj.batches !== undefined && !Array.isArray(obj.batches)) return false;
+  if (obj.top_company !== undefined && typeof obj.top_company !== "boolean") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== REDDIT USER VALIDATIONS =====
+export function isValidRedditUserPostsArgs(
+  args: unknown
+): args is RedditUserPostsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.username !== "string" || !obj.username.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidRedditUserCommentsArgs(
+  args: unknown
+): args is RedditUserCommentsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.username !== "string" || !obj.username.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== LINKEDIN USER DETAILS VALIDATIONS =====
+export function isValidLinkedinUserEducationArgs(
+  args: unknown
+): args is LinkedinUserEducationArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserExperienceArgs(
+  args: unknown
+): args is LinkedinUserExperienceArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserSkillsArgs(
+  args: unknown
+): args is LinkedinUserSkillsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserHonorsArgs(
+  args: unknown
+): args is LinkedinUserHonorsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserPatentsArgs(
+  args: unknown
+): args is LinkedinUserPatentsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinUserLanguagesArgs(
+  args: unknown
+): args is LinkedinUserLanguagesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.urn !== "string" || !obj.urn.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== LINKEDIN SEARCH EXTENSIONS VALIDATIONS =====
+export function isValidLinkedinSearchEducationsArgs(
+  args: unknown
+): args is LinkedinSearchEducationsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinSearchLocationsArgs(
+  args: unknown
+): args is LinkedinSearchLocationsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinSearchIndustriesArgs(
+  args: unknown
+): args is LinkedinSearchIndustriesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinSearchJobsArgs(
+  args: unknown
+): args is LinkedinSearchJobsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0 || obj.count > 1000) return false;
+  if (obj.keywords !== undefined && typeof obj.keywords !== "string") return false;
+  if (obj.location !== undefined && typeof obj.location !== "string") return false;
+  if (obj.sort !== undefined && obj.sort !== "recent" && obj.sort !== "relevant") return false;
+  if (obj.experience_level !== undefined && !Array.isArray(obj.experience_level)) return false;
+  if (obj.job_types !== undefined && !Array.isArray(obj.job_types)) return false;
+  if (obj.work_types !== undefined && !Array.isArray(obj.work_types)) return false;
+  if (obj.industry !== undefined && typeof obj.industry !== "string" && !Array.isArray(obj.industry)) return false;
+  if (obj.company !== undefined && !Array.isArray(obj.company)) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinSearchCompaniesArgs(
+  args: unknown
+): args is LinkedinSearchCompaniesArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.count !== "number" || obj.count <= 0) return false;
+  if (obj.keywords !== undefined && typeof obj.keywords !== "string") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== LINKEDIN COMPANY & MANAGEMENT VALIDATIONS =====
+export function isValidLinkedinCompanyEmployeeStatsArgs(
+  args: unknown
+): args is LinkedinCompanyEmployeeStatsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.company !== "string" || !obj.company.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinManagementCompanyMentionsArgs(
+  args: unknown
+): args is LinkedinManagementCompanyMentionsArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.company !== "string" || !obj.company.trim()) return false;
+  if (obj.count !== undefined && typeof obj.count !== "number") return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+export function isValidLinkedinManagementChatAttachmentBase64Args(
+  args: unknown
+): args is LinkedinManagementChatAttachmentBase64Args {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.attachment_url !== "string" || !obj.attachment_url.trim()) return false;
+  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
+  return true;
+}
+
+// ===== LINKEDIN GROUP VALIDATIONS =====
+export function isValidLinkedinGroupArgs(
+  args: unknown
+): args is LinkedinGroupArgs {
+  if (typeof args !== "object" || args === null) return false;
+  const obj = args as Record<string, unknown>;
+  if (typeof obj.group !== "string" || !obj.group.trim()) return false;
   if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
   return true;
 }
