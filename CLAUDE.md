@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a comprehensive Model Context Protocol (MCP) server providing **71 tools** across multiple platforms through the Anysite API:
+This is a comprehensive Model Context Protocol (MCP) server providing **69 tools** across multiple platforms through the Anysite API:
 
 - **LinkedIn (35 tools):** User search, Sales Navigator, profiles, posts, reactions, comments, endorsers, certificates, email lookup, chat, connections, company data, management operations, education, experience, skills, honors, patents, languages, groups, search extensions (educations/locations/industries/jobs/companies)
 - **Instagram (8 tools):** User profiles, posts, reels, likes, comments, followers/following, post search
@@ -15,7 +15,6 @@ This is a comprehensive Model Context Protocol (MCP) server providing **71 tools
 - **Y Combinator (3 tools):** Company lookup, company search, founder search
 - **DuckDuckGo (1 tool):** Web search
 - **Web Parser (2 tools):** Webpage parsing with 14+ filter options, sitemap extraction
-- **Other (2 tools):** ChatGPT Deep Research (search/fetch) tools
 
 This server enables data retrieval, account management, content extraction, and web scraping capabilities across all major social platforms, video content, financial data (SEC), and startup ecosystems (Y Combinator).
 
@@ -32,7 +31,7 @@ This server enables data retrieval, account management, content extraction, and 
 - Smithery TypeScript runtime adapter implementation
 - Exports executable CLI tools: `anysite-mcp`, `anysite`, `mcp`
 - Uses Model Context Protocol SDK for server functionality
-- Implements 71 tools across LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo, and Web Parser
+- Implements 69 tools across LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo, and Web Parser
 
 ### Type System (`src/types.ts`)
 - Complete TypeScript definitions for all API endpoints
@@ -68,7 +67,6 @@ This server enables data retrieval, account management, content extraction, and 
 12. **Y Combinator** (3 tools): Company information, company search, founder search
 13. **DuckDuckGo** (1 tool): Web search
 14. **Web Parser** (2 tools): Webpage parsing with flexible filtering, sitemap extraction
-15. **Other** (2 tools): ChatGPT Deep Research tools
 
 ### URN Format Requirements
 - User URNs must include `fsd_profile:` prefix (e.g., `fsd_profile:ACoAAEWn01Q...`)

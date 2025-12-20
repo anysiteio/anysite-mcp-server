@@ -1455,51 +1455,6 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
-  // ===== CHATGPT DEEP RESEARCH TOOLS =====
-
-  server.tool(
-    "search",
-    "Search tool optimized for ChatGPT Deep Research mode",
-    {
-      query: z.string().describe("Search query"),
-      count: z.number().default(10).describe("Max results to return"),
-      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
-    },
-    async ({ query, count, timeout }) => {
-      const requestData = { timeout, query, count };
-      log(`Starting ChatGPT Deep Research search for: ${query}`);
-      try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.SEARCH_USERS, requestData);
-        log(`Search complete`);
-        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
-      } catch (error) {
-        log("Search error:", error);
-        return { content: [{ type: "text", text: `Search API error: ${formatError(error)}` }], isError: true };
-      }
-    }
-  );
-
-  server.tool(
-    "fetch",
-    "Fetch tool optimized for ChatGPT Deep Research mode - retrieves complete LinkedIn profile information",
-    {
-      id: z.string().describe("LinkedIn profile URL or username to fetch"),
-      timeout: z.number().default(300).describe("Timeout in seconds (20-1500)")
-    },
-    async ({ id, timeout }) => {
-      const requestData = { timeout, user: id, with_experience: true, with_education: true, with_skills: true };
-      log(`Starting ChatGPT Deep Research fetch for: ${id}`);
-      try {
-        const response = await makeRequest(API_CONFIG.ENDPOINTS.USER_PROFILE, requestData);
-        log(`Fetch complete`);
-        return { content: [{ type: "text", text: JSON.stringify(response, null, 2) }] };
-      } catch (error) {
-        log("Fetch error:", error);
-        return { content: [{ type: "text", text: `Fetch API error: ${formatError(error)}` }], isError: true };
-      }
-    }
-  );
-
   // ========================================
   // NEW TOOLS (v1.0.0 - API v17)
   // ========================================
@@ -2159,7 +2114,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
-  log("AnySite MCP Server initialized with 71 tools");
+  log("AnySite MCP Server initialized with 69 tools");
   log("Management tools (chat, connections, posting, company mentions, attachments) require ACCOUNT_ID");
 
   return server;

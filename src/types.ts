@@ -1073,18 +1073,6 @@ export interface WebParserSitemapArgs {
   timeout?: number;
 }
 
-// ChatGPT Deep Research types (optional, for ChatGPT clients only)
-export interface ChatGPTSearchArgs {
-  query: string;
-  count?: number;
-  timeout?: number;
-}
-
-export interface ChatGPTFetchArgs {
-  id: string; // LinkedIn profile URL or username to fetch
-  timeout?: number;
-}
-
 // ===== VALIDATION FUNCTIONS FOR NEW TYPES =====
 
 // LinkedIn validations
@@ -1257,28 +1245,6 @@ export function isValidWebParserSitemapArgs(
   if (typeof args !== "object" || args === null) return false;
   const obj = args as Record<string, unknown>;
   if (typeof obj.url !== "string" || !obj.url.trim()) return false;
-  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
-  return true;
-}
-
-// ChatGPT Deep Research validations (optional)
-export function isValidChatGPTSearchArgs(
-  args: unknown
-): args is ChatGPTSearchArgs {
-  if (typeof args !== "object" || args === null) return false;
-  const obj = args as Record<string, unknown>;
-  if (typeof obj.query !== "string" || !obj.query.trim()) return false;
-  if (obj.count !== undefined && typeof obj.count !== "number") return false;
-  if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
-  return true;
-}
-
-export function isValidChatGPTFetchArgs(
-  args: unknown
-): args is ChatGPTFetchArgs {
-  if (typeof args !== "object" || args === null) return false;
-  const obj = args as Record<string, unknown>;
-  if (typeof obj.id !== "string" || !obj.id.trim()) return false;
   if (obj.timeout !== undefined && (typeof obj.timeout !== "number" || obj.timeout < 20 || obj.timeout > 1500)) return false;
   return true;
 }

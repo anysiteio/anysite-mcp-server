@@ -48,7 +48,6 @@ import {
   SendLinkedinPostArgs,
   LinkedinSalesNavigatorSearchUsersArgs,
   LinkedinManagementConversationsPayload,
-  GoogleSearchPayload,
   LinkedinSearchPostsArgs,
   RedditSearchPostsArgs,
   RedditPostsArgs,
@@ -70,11 +69,35 @@ import {
   TwitterSearchUsersArgs,
   TwitterUserPostsArgs,
   TwitterSearchPostsArgs,
-  TwitterPostArgs,
   WebParserParseArgs,
   WebParserSitemapArgs,
-  ChatGPTSearchArgs,
-  ChatGPTFetchArgs,
+  // v1.0.0 types
+  DuckDuckGoSearchArgs,
+  YoutubeSearchVideosArgs,
+  YoutubeVideoArgs,
+  YoutubeVideoSubtitlesArgs,
+  SecSearchCompaniesArgs,
+  SecDocumentArgs,
+  YcCompanyArgs,
+  YcSearchCompaniesArgs,
+  YcSearchFoundersArgs,
+  RedditUserPostsArgs,
+  RedditUserCommentsArgs,
+  LinkedinUserEducationArgs,
+  LinkedinUserExperienceArgs,
+  LinkedinUserSkillsArgs,
+  LinkedinUserHonorsArgs,
+  LinkedinUserPatentsArgs,
+  LinkedinUserLanguagesArgs,
+  LinkedinSearchEducationsArgs,
+  LinkedinSearchLocationsArgs,
+  LinkedinSearchIndustriesArgs,
+  LinkedinSearchJobsArgs,
+  LinkedinSearchCompaniesArgs,
+  LinkedinCompanyEmployeeStatsArgs,
+  LinkedinManagementCompanyMentionsArgs,
+  LinkedinManagementChatAttachmentBase64Args,
+  LinkedinGroupArgs,
   isValidLinkedinSearchUsersArgs,
   isValidLinkedinUserProfileArgs,
   isValidLinkedinEmailUserArgs,
@@ -95,7 +118,6 @@ import {
   isValidSendLinkedinPostArgs,
   isValidLinkedinSalesNavigatorSearchUsersArgs,
   isValidLinkedinManagementConversationsArgs,
-  isValidGoogleSearchPayload,
   isValidLinkedinSearchPostsArgs,
   isValidRedditSearchPostsArgs,
   isValidRedditPostsArgs,
@@ -117,11 +139,35 @@ import {
   isValidTwitterSearchUsersArgs,
   isValidTwitterUserPostsArgs,
   isValidTwitterSearchPostsArgs,
-  isValidTwitterPostArgs,
   isValidWebParserParseArgs,
   isValidWebParserSitemapArgs,
-  isValidChatGPTSearchArgs,
-  isValidChatGPTFetchArgs
+  // v1.0.0 validations
+  isValidDuckDuckGoSearchArgs,
+  isValidYoutubeSearchVideosArgs,
+  isValidYoutubeVideoArgs,
+  isValidYoutubeVideoSubtitlesArgs,
+  isValidSecSearchCompaniesArgs,
+  isValidSecDocumentArgs,
+  isValidYcCompanyArgs,
+  isValidYcSearchCompaniesArgs,
+  isValidYcSearchFoundersArgs,
+  isValidRedditUserPostsArgs,
+  isValidRedditUserCommentsArgs,
+  isValidLinkedinUserEducationArgs,
+  isValidLinkedinUserExperienceArgs,
+  isValidLinkedinUserSkillsArgs,
+  isValidLinkedinUserHonorsArgs,
+  isValidLinkedinUserPatentsArgs,
+  isValidLinkedinUserLanguagesArgs,
+  isValidLinkedinSearchEducationsArgs,
+  isValidLinkedinSearchLocationsArgs,
+  isValidLinkedinSearchIndustriesArgs,
+  isValidLinkedinSearchJobsArgs,
+  isValidLinkedinSearchCompaniesArgs,
+  isValidLinkedinCompanyEmployeeStatsArgs,
+  isValidLinkedinManagementCompanyMentionsArgs,
+  isValidLinkedinManagementChatAttachmentBase64Args,
+  isValidLinkedinGroupArgs
 } from "./types.js";
 
 debugLog("Loading dotenv...");
@@ -189,7 +235,6 @@ const API_CONFIG = {
     LINKEDIN_COMPANY_POSTS: "/api/linkedin/company/posts",
     LINKEDIN_SN_SEARCH_USERS: "/api/linkedin/sn_search/users",
     CONVERSATIONS: "/api/linkedin/management/conversations",
-    GOOGLE_SEARCH: "/api/google/search",
     INSTAGRAM_USER: "/api/instagram/user",
     INSTAGRAM_USER_POSTS: "/api/instagram/user/posts",
     INSTAGRAM_POST_COMMENTS: "/api/instagram/post/comments",
@@ -209,10 +254,45 @@ const API_CONFIG = {
     TWITTER_SEARCH_USERS: "/api/twitter/search/users",
     TWITTER_USER_POSTS: "/api/twitter/user/posts",
     TWITTER_SEARCH_POSTS: "/api/twitter/search/posts",
-    TWITTER_POST: "/api/twitter/post",
     // Web Parser endpoints
     WEBPARSER_PARSE: "/api/webparser/parse",
     WEBPARSER_SITEMAP: "/api/webparser/sitemap",
+    // ===== NEW ENDPOINTS (v1.0.0 - API v17) =====
+    // DuckDuckGo
+    DUCKDUCKGO_SEARCH: "/api/duckduckgo/search",
+    // YouTube
+    YOUTUBE_SEARCH_VIDEOS: "/api/youtube/search/videos",
+    YOUTUBE_VIDEO: "/api/youtube/video",
+    YOUTUBE_VIDEO_SUBTITLES: "/api/youtube/video/subtitles",
+    // SEC
+    SEC_SEARCH_COMPANIES: "/api/sec/search/companies",
+    SEC_DOCUMENT: "/api/sec/document",
+    // Y Combinator
+    YC_COMPANY: "/api/yc/company",
+    YC_SEARCH_COMPANIES: "/api/yc/search/companies",
+    YC_SEARCH_FOUNDERS: "/api/yc/search/founders",
+    // Reddit User
+    REDDIT_USER_POSTS: "/api/reddit/user/posts",
+    REDDIT_USER_COMMENTS: "/api/reddit/user/comments",
+    // LinkedIn User Details
+    LINKEDIN_USER_EDUCATION: "/api/linkedin/user/education",
+    LINKEDIN_USER_EXPERIENCE: "/api/linkedin/user/experience",
+    LINKEDIN_USER_SKILLS: "/api/linkedin/user/skills",
+    LINKEDIN_USER_HONORS: "/api/linkedin/user/honors",
+    LINKEDIN_USER_PATENTS: "/api/linkedin/user/patents",
+    LINKEDIN_USER_LANGUAGES: "/api/linkedin/user/languages",
+    // LinkedIn Search Extensions
+    LINKEDIN_SEARCH_EDUCATIONS: "/api/linkedin/search/educations",
+    LINKEDIN_SEARCH_LOCATIONS: "/api/linkedin/search/locations",
+    LINKEDIN_SEARCH_INDUSTRIES: "/api/linkedin/search/industries",
+    LINKEDIN_SEARCH_JOBS: "/api/linkedin/search/jobs",
+    LINKEDIN_SEARCH_COMPANIES: "/api/linkedin/search/companies",
+    // LinkedIn Company & Management
+    LINKEDIN_COMPANY_EMPLOYEE_STATS: "/api/linkedin/company/employee_stats",
+    LINKEDIN_MANAGEMENT_COMPANY_MENTIONS: "/api/linkedin/management/company/mentions",
+    LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64: "/api/linkedin/management/chat/attachment/base64",
+    // LinkedIn Groups
+    LINKEDIN_GROUP: "/api/linkedin/group"
   }
 } as const;
 
@@ -731,20 +811,6 @@ const GET_LINKEDIN_CONVERSATIONS_TOOL: Tool = {
   }
 };
 
-const GOOGLE_SEARCH_TOOL: Tool = {
-  name: "google_search",
-  description: "Search for information using Google search API",
-  inputSchema: {
-    type: "object",
-    properties: {
-      query: { type: "string", description: "Search query. For example: 'python fastapi'" },
-      count: { type: "number", description: "Maximum number of results (from 1 to 20)", default: 10 },
-      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
-    },
-    required: ["query"]
-  }
-};
-
 const LINKEDIN_SEARCH_POSTS_TOOL: Tool = {
   name: "search_linkedin_posts",
   description: "Search for LinkedIn posts with various filters like keywords, content type, authors, etc.",
@@ -1066,19 +1132,6 @@ const SEARCH_TWITTER_POSTS_TOOL: Tool = {
   }
 };
 
-const GET_TWITTER_POST_TOOL: Tool = {
-  name: "get_twitter_post",
-  description: "Get Twitter/X post details",
-  inputSchema: {
-    type: "object",
-    properties: {
-      post_url: { type: "string", description: "Twitter post URL" },
-      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
-    },
-    required: ["post_url"]
-  }
-};
-
 // ===== WEB PARSER TOOLS =====
 
 const PARSE_WEBPAGE_TOOL: Tool = {
@@ -1119,37 +1172,406 @@ const GET_SITEMAP_TOOL: Tool = {
   }
 };
 
-// ===== CHATGPT DEEP RESEARCH TOOLS =====
+// ========================================
+// NEW TOOLS (v1.0.0 - API v17)
+// ========================================
 
-const CHATGPT_SEARCH_TOOL: Tool = {
-  name: "search",
-  description: "Search tool optimized for ChatGPT Deep Research mode",
+// ===== DUCKDUCKGO TOOLS =====
+
+const DUCKDUCKGO_SEARCH_TOOL: Tool = {
+  name: "duckduckgo_search",
+  description: "Search DuckDuckGo for web results",
   inputSchema: {
     type: "object",
     properties: {
       query: { type: "string", description: "Search query" },
-      count: { type: "number", description: "Max results to return", default: 10 },
+      count: { type: "number", description: "Max results (1-20)", default: 10 },
       timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
     },
     required: ["query"]
   }
 };
 
-const CHATGPT_FETCH_TOOL: Tool = {
-  name: "fetch",
-  description: "Fetch tool optimized for ChatGPT Deep Research mode - retrieves complete LinkedIn profile information",
+// ===== YOUTUBE TOOLS =====
+
+const YOUTUBE_SEARCH_VIDEOS_TOOL: Tool = {
+  name: "search_youtube_videos",
+  description: "Search YouTube videos by query",
   inputSchema: {
     type: "object",
     properties: {
-      id: { type: "string", description: "LinkedIn profile URL or username to fetch" },
+      query: { type: "string", description: "Search query" },
+      count: { type: "number", description: "Max results", default: 10 },
       timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
     },
-    required: ["id"]
+    required: ["query", "count"]
+  }
+};
+
+const YOUTUBE_VIDEO_TOOL: Tool = {
+  name: "get_youtube_video",
+  description: "Get detailed YouTube video information by ID or URL",
+  inputSchema: {
+    type: "object",
+    properties: {
+      video: { type: "string", description: "Video ID or URL (e.g., 'dQw4w9WgXcQ' or full YouTube URL)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["video"]
+  }
+};
+
+const YOUTUBE_VIDEO_SUBTITLES_TOOL: Tool = {
+  name: "get_youtube_video_subtitles",
+  description: "Extract YouTube video subtitles/captions with timestamps",
+  inputSchema: {
+    type: "object",
+    properties: {
+      video: { type: "string", description: "Video ID or URL" },
+      language: { type: "string", description: "Language code (e.g., 'en', 'ru'). Auto-detect if not specified" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["video"]
+  }
+};
+
+// ===== SEC TOOLS =====
+
+const SEC_SEARCH_COMPANIES_TOOL: Tool = {
+  name: "search_sec_companies",
+  description: "Search SEC EDGAR database for company filings with advanced filters",
+  inputSchema: {
+    type: "object",
+    properties: {
+      entity_name: { type: "string", description: "Company name or ticker (e.g., 'apple', 'AAPL')" },
+      forms: { type: "array", items: { type: "string" }, description: "Form types filter (e.g., ['10-K', '10-Q'] or exclusions ['-3', '-4'])" },
+      location_codes: { type: "array", items: { type: "string" }, description: "State codes (e.g., ['CA', 'NY'])" },
+      date_from: { type: "string", description: "Start date (YYYY-MM-DD format)" },
+      date_to: { type: "string", description: "End date (YYYY-MM-DD format)" },
+      count: { type: "number", description: "Max results (max 100)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+const SEC_DOCUMENT_TOOL: Tool = {
+  name: "get_sec_document",
+  description: "Retrieve full SEC document content by URL",
+  inputSchema: {
+    type: "object",
+    properties: {
+      document_url: { type: "string", description: "SEC EDGAR document URL (e.g., 'https://www.sec.gov/Archives/edgar/data/...')" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["document_url"]
+  }
+};
+
+// ===== Y COMBINATOR TOOLS =====
+
+const YC_COMPANY_TOOL: Tool = {
+  name: "get_yc_company",
+  description: "Get comprehensive Y Combinator company information by slug",
+  inputSchema: {
+    type: "object",
+    properties: {
+      company: { type: "string", description: "YC company slug (e.g., 'airbnb', 'stripe', 'openai')" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["company"]
+  }
+};
+
+const YC_SEARCH_COMPANIES_TOOL: Tool = {
+  name: "search_yc_companies",
+  description: "Search Y Combinator companies with advanced filters",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query for company name" },
+      industries: { type: "array", items: { type: "string" }, description: "Filter by industries (e.g., ['Healthcare', 'B2B'])" },
+      regions: { type: "array", items: { type: "string" }, description: "Filter by regions (e.g., ['Latin America', 'Europe'])" },
+      batches: { type: "array", items: { type: "string" }, description: "Filter by batches (e.g., ['Winter 2026', 'Summer 2025'])" },
+      is_hiring: { type: "boolean", description: "Filter by hiring status" },
+      nonprofit: { type: "boolean", description: "Filter by nonprofit status" },
+      top_company: { type: "boolean", description: "Filter by top company status" },
+      team_size_min: { type: "number", description: "Minimum team size" },
+      team_size_max: { type: "number", description: "Maximum team size (max 10000)" },
+      count: { type: "number", description: "Max results" },
+      sort_by: { type: "string", enum: ["relevance", "launch_date"], description: "Sort order", default: "relevance" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+const YC_SEARCH_FOUNDERS_TOOL: Tool = {
+  name: "search_yc_founders",
+  description: "Search Y Combinator founders with filters",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query for founder name or company" },
+      industries: { type: "array", items: { type: "string" }, description: "Filter by industries (e.g., ['Education', 'Fintech'])" },
+      titles: { type: "array", items: { type: "string" }, description: "Filter by titles (e.g., ['CEO', 'Founder', 'CTO'])" },
+      batches: { type: "array", items: { type: "string" }, description: "Filter by YC batches (e.g., ['W25', 'S25', 'F25'])" },
+      top_company: { type: "boolean", description: "Filter by top company status" },
+      count: { type: "number", description: "Max results" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+// ===== REDDIT USER TOOLS =====
+
+const REDDIT_USER_POSTS_TOOL: Tool = {
+  name: "get_reddit_user_posts",
+  description: "Get posts from a Reddit user",
+  inputSchema: {
+    type: "object",
+    properties: {
+      username: { type: "string", description: "Reddit username (without u/ prefix, e.g., 'Confident_Rough_2846')" },
+      count: { type: "number", description: "Max posts to return", default: 25 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["username"]
+  }
+};
+
+const REDDIT_USER_COMMENTS_TOOL: Tool = {
+  name: "get_reddit_user_comments",
+  description: "Get comments from a Reddit user",
+  inputSchema: {
+    type: "object",
+    properties: {
+      username: { type: "string", description: "Reddit username (without u/ prefix, e.g., 'Confident_Rough_2846')" },
+      count: { type: "number", description: "Max comments to return", default: 25 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["username"]
+  }
+};
+
+// ===== LINKEDIN USER DETAILS TOOLS =====
+
+const LINKEDIN_USER_EDUCATION_TOOL: Tool = {
+  name: "get_linkedin_user_education",
+  description: "Get LinkedIn user education history by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const LINKEDIN_USER_EXPERIENCE_TOOL: Tool = {
+  name: "get_linkedin_user_experience",
+  description: "Get LinkedIn user work experience by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const LINKEDIN_USER_SKILLS_TOOL: Tool = {
+  name: "get_linkedin_user_skills",
+  description: "Get LinkedIn user skills by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const LINKEDIN_USER_HONORS_TOOL: Tool = {
+  name: "get_linkedin_user_honors",
+  description: "Get LinkedIn user honors and awards by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const LINKEDIN_USER_PATENTS_TOOL: Tool = {
+  name: "get_linkedin_user_patents",
+  description: "Get LinkedIn user patents by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+const LINKEDIN_USER_LANGUAGES_TOOL: Tool = {
+  name: "get_linkedin_user_languages",
+  description: "Get LinkedIn user language proficiencies by URN",
+  inputSchema: {
+    type: "object",
+    properties: {
+      urn: { type: "string", description: "User URN (must include prefix, example: fsd_profile:ACoAA...)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["urn"]
+  }
+};
+
+// ===== LINKEDIN SEARCH EXTENSIONS =====
+
+const LINKEDIN_SEARCH_EDUCATIONS_TOOL: Tool = {
+  name: "search_linkedin_educations",
+  description: "Search educational institutions for LinkedIn filtering",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query for educational institutions (e.g., 'Harvard', 'MIT')" },
+      count: { type: "number", description: "Max results", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["query"]
+  }
+};
+
+const LINKEDIN_SEARCH_LOCATIONS_TOOL: Tool = {
+  name: "search_linkedin_locations",
+  description: "Search locations for LinkedIn filtering",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query for location (e.g., 'Tokyo', 'San Francisco')" },
+      count: { type: "number", description: "Max results", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["query"]
+  }
+};
+
+const LINKEDIN_SEARCH_INDUSTRIES_TOOL: Tool = {
+  name: "search_linkedin_industries",
+  description: "Search industries for LinkedIn filtering",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search query for industry (e.g., 'IT', 'Healthcare')" },
+      count: { type: "number", description: "Max results", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["query"]
+  }
+};
+
+const LINKEDIN_SEARCH_JOBS_TOOL: Tool = {
+  name: "search_linkedin_jobs",
+  description: "Search LinkedIn job postings with advanced filters",
+  inputSchema: {
+    type: "object",
+    properties: {
+      keywords: { type: "string", description: "Job search keywords" },
+      location: { type: "string", description: "Job location (default: 'worldwide')" },
+      sort: { type: "string", enum: ["recent", "relevant"], description: "Sort order" },
+      experience_level: { type: "array", items: { type: "string" }, description: "Experience levels: internship, entry_level, associate, mid_senior, director, executive" },
+      job_types: { type: "array", items: { type: "string" }, description: "Job types: full_time, part_time, contract, temporary, internship, other" },
+      work_types: { type: "array", items: { type: "string" }, description: "Work types: hybrid, remote, on_site" },
+      industry: { anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }], description: "Industry URN or keyword" },
+      company: { type: "array", items: { type: "string" }, description: "Company URNs" },
+      count: { type: "number", description: "Max results (max 1000)" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+const LINKEDIN_SEARCH_COMPANIES_TOOL: Tool = {
+  name: "search_linkedin_companies",
+  description: "Search LinkedIn companies by keywords",
+  inputSchema: {
+    type: "object",
+    properties: {
+      keywords: { type: "string", description: "Company search keywords" },
+      count: { type: "number", description: "Max results" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["count"]
+  }
+};
+
+// ===== LINKEDIN COMPANY & MANAGEMENT EXTENSIONS =====
+
+const LINKEDIN_COMPANY_EMPLOYEE_STATS_TOOL: Tool = {
+  name: "get_linkedin_company_employee_stats",
+  description: "Get LinkedIn company employee statistics",
+  inputSchema: {
+    type: "object",
+    properties: {
+      company: { type: "string", description: "Company URN or URL" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["company"]
+  }
+};
+
+const LINKEDIN_MANAGEMENT_COMPANY_MENTIONS_TOOL: Tool = {
+  name: "get_linkedin_management_company_mentions",
+  description: "Track company mentions on LinkedIn (requires ACCOUNT_ID)",
+  inputSchema: {
+    type: "object",
+    properties: {
+      company: { type: "string", description: "Company URN or alias" },
+      count: { type: "number", description: "Max mentions to return", default: 10 },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["company"]
+  }
+};
+
+const LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64_TOOL: Tool = {
+  name: "get_linkedin_chat_attachment_base64",
+  description: "Download LinkedIn chat attachment as base64 (requires ACCOUNT_ID)",
+  inputSchema: {
+    type: "object",
+    properties: {
+      attachment_url: { type: "string", description: "Attachment URL from chat messages" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["attachment_url"]
+  }
+};
+
+// ===== LINKEDIN GROUP TOOLS =====
+
+const LINKEDIN_GROUP_TOOL: Tool = {
+  name: "get_linkedin_group",
+  description: "Get LinkedIn group information",
+  inputSchema: {
+    type: "object",
+    properties: {
+      group: { type: "string", description: "Group URL or URN (e.g., '3990648')" },
+      timeout: { type: "number", description: "Timeout in seconds (20-1500)", default: 300 }
+    },
+    required: ["group"]
   }
 };
 
 const server = new Server(
-  { name: "anysite-mcp", version: "0.1.0" },
+  { name: "anysite-mcp", version: "1.0.0" },
   {
     capabilities: {
       resources: { supportedTypes: ["application/json", "text/plain"] },
@@ -1204,7 +1626,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     SEND_LINKEDIN_POST_TOOL,
     LINKEDIN_SN_SEARCH_USERS_TOOL,
     GET_LINKEDIN_CONVERSATIONS_TOOL,
-    GOOGLE_SEARCH_TOOL,
     INSTAGRAM_USER_TOOL,
     INSTAGRAM_USER_POSTS_TOOL,
     INSTAGRAM_POST_COMMENTS_TOOL,
@@ -1225,13 +1646,36 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     SEARCH_TWITTER_USERS_TOOL,
     GET_TWITTER_USER_POSTS_TOOL,
     SEARCH_TWITTER_POSTS_TOOL,
-    GET_TWITTER_POST_TOOL,
     // Web Parser tools
     PARSE_WEBPAGE_TOOL,
     GET_SITEMAP_TOOL,
-    // ChatGPT Deep Research tools
-    CHATGPT_SEARCH_TOOL,
-    CHATGPT_FETCH_TOOL
+    // v1.0.0 new tools
+    DUCKDUCKGO_SEARCH_TOOL,
+    YOUTUBE_SEARCH_VIDEOS_TOOL,
+    YOUTUBE_VIDEO_TOOL,
+    YOUTUBE_VIDEO_SUBTITLES_TOOL,
+    SEC_SEARCH_COMPANIES_TOOL,
+    SEC_DOCUMENT_TOOL,
+    YC_COMPANY_TOOL,
+    YC_SEARCH_COMPANIES_TOOL,
+    YC_SEARCH_FOUNDERS_TOOL,
+    REDDIT_USER_POSTS_TOOL,
+    REDDIT_USER_COMMENTS_TOOL,
+    LINKEDIN_USER_EDUCATION_TOOL,
+    LINKEDIN_USER_EXPERIENCE_TOOL,
+    LINKEDIN_USER_SKILLS_TOOL,
+    LINKEDIN_USER_HONORS_TOOL,
+    LINKEDIN_USER_PATENTS_TOOL,
+    LINKEDIN_USER_LANGUAGES_TOOL,
+    LINKEDIN_SEARCH_EDUCATIONS_TOOL,
+    LINKEDIN_SEARCH_LOCATIONS_TOOL,
+    LINKEDIN_SEARCH_INDUSTRIES_TOOL,
+    LINKEDIN_SEARCH_JOBS_TOOL,
+    LINKEDIN_SEARCH_COMPANIES_TOOL,
+    LINKEDIN_COMPANY_EMPLOYEE_STATS_TOOL,
+    LINKEDIN_MANAGEMENT_COMPANY_MENTIONS_TOOL,
+    LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64_TOOL,
+    LINKEDIN_GROUP_TOOL
   ]
 }));
 
@@ -2151,43 +2595,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
       }
 
-      case "google_search": {
-        if (!isValidGoogleSearchPayload(args)) {
-          throw new McpError(ErrorCode.InvalidParams, "Invalid Google search arguments");
-        }
-        const { query, count = 10, timeout = 300 } = args as GoogleSearchPayload;
-        const requestData = {
-          timeout,
-          query,
-          count: Math.min(Math.max(1, count), 20) // Ensure count is between 1 and 20
-        };
-        log(`Starting Google search for: ${query}`);
-        try {
-          const response = await makeRequest(API_CONFIG.ENDPOINTS.GOOGLE_SEARCH, requestData);
-          return {
-            content: [
-              {
-                type: "text",
-                mimeType: "application/json",
-                text: JSON.stringify(response, null, 2)
-              }
-            ]
-          };
-        } catch (error) {
-          log("Google search error:", error);
-          return {
-            content: [
-              {
-                type: "text",
-                mimeType: "text/plain",
-                text: `Google search API error: ${formatError(error)}`
-              }
-            ],
-            isError: true
-          };
-        }
-      }
-
       case "search_linkedin_posts": {
         if (!isValidLinkedinSearchPostsArgs(args)) {
           throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search posts arguments");
@@ -2842,29 +3249,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
       }
 
-      case "get_twitter_post": {
-        if (!isValidTwitterPostArgs(args)) {
-          throw new McpError(ErrorCode.InvalidParams, "Invalid Twitter post arguments");
-        }
-        const { post_url, timeout = 300 } = args as TwitterPostArgs;
-        const requestData = { timeout, post_url };
-
-        log(`Starting Twitter post lookup for: ${post_url}`);
-        try {
-          const response = await makeRequest(API_CONFIG.ENDPOINTS.TWITTER_POST, requestData);
-          log(`Twitter post lookup complete`);
-          return {
-            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
-          };
-        } catch (error) {
-          log("Twitter post lookup error:", error);
-          return {
-            content: [{ type: "text", mimeType: "text/plain", text: `Twitter post API error: ${formatError(error)}` }],
-            isError: true
-          };
-        }
-      }
-
       // ===== WEB PARSER TOOLS =====
 
       case "parse_webpage": {
@@ -2921,51 +3305,476 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
       }
 
-      // ===== CHATGPT DEEP RESEARCH TOOLS =====
+      // ========================================
+      // NEW TOOL HANDLERS (v1.0.0 - API v17)
+      // ========================================
 
-      case "search": {
-        if (!isValidChatGPTSearchArgs(args)) {
-          throw new McpError(ErrorCode.InvalidParams, "Invalid search arguments");
+      case "duckduckgo_search": {
+        if (!isValidDuckDuckGoSearchArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid DuckDuckGo search arguments");
         }
-        const { query, count = 10, timeout = 300 } = args as ChatGPTSearchArgs;
-        const requestData = { timeout, query, count };
-
-        log(`Starting ChatGPT Deep Research search for: ${query}`);
+        const { query, count = 10, timeout = 300 } = args as DuckDuckGoSearchArgs;
+        const requestData = { timeout, query, count: Math.min(Math.max(1, count), 20) };
+        log(`Starting DuckDuckGo search for: ${query}`);
         try {
-          const response = await makeRequest(API_CONFIG.ENDPOINTS.SEARCH_USERS, requestData);
-          log(`Search complete`);
-          return {
-            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
-          };
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.DUCKDUCKGO_SEARCH, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
         } catch (error) {
-          log("Search error:", error);
-          return {
-            content: [{ type: "text", mimeType: "text/plain", text: `Search API error: ${formatError(error)}` }],
-            isError: true
-          };
+          log("DuckDuckGo search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `DuckDuckGo search API error: ${formatError(error)}` }], isError: true };
         }
       }
 
-      case "fetch": {
-        if (!isValidChatGPTFetchArgs(args)) {
-          throw new McpError(ErrorCode.InvalidParams, "Invalid fetch arguments");
+      case "search_youtube_videos": {
+        if (!isValidYoutubeSearchVideosArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YouTube search videos arguments");
         }
-        const { id, timeout = 300 } = args as ChatGPTFetchArgs;
-        const requestData = { timeout, user: id, with_experience: true, with_education: true, with_skills: true };
-
-        log(`Starting ChatGPT Deep Research fetch for: ${id}`);
+        const { query, count, timeout = 300 } = args as YoutubeSearchVideosArgs;
+        const requestData = { timeout, query, count };
+        log(`Starting YouTube videos search for: ${query}`);
         try {
-          const response = await makeRequest(API_CONFIG.ENDPOINTS.USER_PROFILE, requestData);
-          log(`Fetch complete`);
-          return {
-            content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }]
-          };
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_SEARCH_VIDEOS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
         } catch (error) {
-          log("Fetch error:", error);
-          return {
-            content: [{ type: "text", mimeType: "text/plain", text: `Fetch API error: ${formatError(error)}` }],
-            isError: true
-          };
+          log("YouTube videos search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YouTube videos search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_youtube_video": {
+        if (!isValidYoutubeVideoArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YouTube video arguments");
+        }
+        const { video, timeout = 300 } = args as YoutubeVideoArgs;
+        const requestData = { timeout, video };
+        log(`Starting YouTube video lookup for: ${video}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_VIDEO, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("YouTube video lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YouTube video API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_youtube_video_subtitles": {
+        if (!isValidYoutubeVideoSubtitlesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YouTube video subtitles arguments");
+        }
+        const { video, language, timeout = 300 } = args as YoutubeVideoSubtitlesArgs;
+        const requestData: any = { timeout, video };
+        if (language) requestData.language = language;
+        log(`Starting YouTube video subtitles extraction for: ${video}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YOUTUBE_VIDEO_SUBTITLES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("YouTube video subtitles extraction error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YouTube video subtitles API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_sec_companies": {
+        if (!isValidSecSearchCompaniesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid SEC search companies arguments");
+        }
+        const { entity_name, forms, location_codes, date_from, date_to, count, timeout = 300 } = args as SecSearchCompaniesArgs;
+        const requestData: any = { timeout, count };
+        if (entity_name) requestData.entity_name = entity_name;
+        if (forms) requestData.forms = forms;
+        if (location_codes) requestData.location_codes = location_codes;
+        if (date_from) requestData.date_from = date_from;
+        if (date_to) requestData.date_to = date_to;
+        log(`Starting SEC companies search with filters`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.SEC_SEARCH_COMPANIES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("SEC companies search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `SEC companies search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_sec_document": {
+        if (!isValidSecDocumentArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid SEC document arguments");
+        }
+        const { document_url, timeout = 300 } = args as SecDocumentArgs;
+        const requestData = { timeout, document_url };
+        log(`Starting SEC document retrieval for: ${document_url}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.SEC_DOCUMENT, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("SEC document retrieval error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `SEC document API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_yc_company": {
+        if (!isValidYcCompanyArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YC company arguments");
+        }
+        const { company, timeout = 300 } = args as YcCompanyArgs;
+        const requestData = { timeout, company };
+        log(`Starting YC company lookup for: ${company}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_COMPANY, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("YC company lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YC company API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_yc_companies": {
+        if (!isValidYcSearchCompaniesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YC search companies arguments");
+        }
+        const { query, industries, regions, batches, is_hiring, nonprofit, top_company, team_size_min, team_size_max, count, sort_by = "relevance", timeout = 300 } = args as YcSearchCompaniesArgs;
+        const requestData: any = { timeout, count, sort_by };
+        if (query) requestData.query = query;
+        if (industries) requestData.industries = industries;
+        if (regions) requestData.regions = regions;
+        if (batches) requestData.batches = batches;
+        if (is_hiring !== undefined) requestData.is_hiring = is_hiring;
+        if (nonprofit !== undefined) requestData.nonprofit = nonprofit;
+        if (top_company !== undefined) requestData.top_company = top_company;
+        if (team_size_min !== undefined) requestData.team_size_min = team_size_min;
+        if (team_size_max !== undefined) requestData.team_size_max = team_size_max;
+        log(`Starting YC companies search with filters`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_SEARCH_COMPANIES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("YC companies search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YC companies search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_yc_founders": {
+        if (!isValidYcSearchFoundersArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid YC search founders arguments");
+        }
+        const { query, industries, titles, batches, top_company, count, timeout = 300 } = args as YcSearchFoundersArgs;
+        const requestData: any = { timeout, count };
+        if (query) requestData.query = query;
+        if (industries) requestData.industries = industries;
+        if (titles) requestData.titles = titles;
+        if (batches) requestData.batches = batches;
+        if (top_company !== undefined) requestData.top_company = top_company;
+        log(`Starting YC founders search with filters`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.YC_SEARCH_FOUNDERS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("YC founders search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `YC founders search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_reddit_user_posts": {
+        if (!isValidRedditUserPostsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Reddit user posts arguments");
+        }
+        const { username, count = 25, timeout = 300 } = args as RedditUserPostsArgs;
+        const requestData = { timeout, username, count };
+        log(`Starting Reddit user posts lookup for: u/${username}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.REDDIT_USER_POSTS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("Reddit user posts lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `Reddit user posts API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_reddit_user_comments": {
+        if (!isValidRedditUserCommentsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid Reddit user comments arguments");
+        }
+        const { username, count = 25, timeout = 300 } = args as RedditUserCommentsArgs;
+        const requestData = { timeout, username, count };
+        log(`Starting Reddit user comments lookup for: u/${username}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.REDDIT_USER_COMMENTS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("Reddit user comments lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `Reddit user comments API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_education": {
+        if (!isValidLinkedinUserEducationArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user education arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserEducationArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user education lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EDUCATION, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user education lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user education API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_experience": {
+        if (!isValidLinkedinUserExperienceArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user experience arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserExperienceArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user experience lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_EXPERIENCE, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user experience lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user experience API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_skills": {
+        if (!isValidLinkedinUserSkillsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user skills arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserSkillsArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user skills lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_SKILLS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user skills lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user skills API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_honors": {
+        if (!isValidLinkedinUserHonorsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user honors arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserHonorsArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user honors lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_HONORS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user honors lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user honors API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_patents": {
+        if (!isValidLinkedinUserPatentsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user patents arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserPatentsArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user patents lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_PATENTS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user patents lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user patents API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_user_languages": {
+        if (!isValidLinkedinUserLanguagesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn user languages arguments");
+        }
+        const { urn, timeout = 300 } = args as LinkedinUserLanguagesArgs;
+        const normalizedURN = normalizeUserURN(urn);
+        if (!isValidUserURN(normalizedURN)) {
+          return { content: [{ type: "text", mimeType: "text/plain", text: "Invalid URN format. Must start with 'fsd_profile:'" }], isError: true };
+        }
+        const requestData = { timeout, urn: normalizedURN };
+        log(`Starting LinkedIn user languages lookup for: ${normalizedURN}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_USER_LANGUAGES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn user languages lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn user languages API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_linkedin_educations": {
+        if (!isValidLinkedinSearchEducationsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search educations arguments");
+        }
+        const { query, count = 10, timeout = 300 } = args as LinkedinSearchEducationsArgs;
+        const requestData = { timeout, query, count };
+        log(`Starting LinkedIn educations search for: ${query}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_EDUCATIONS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn educations search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn educations search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_linkedin_locations": {
+        if (!isValidLinkedinSearchLocationsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search locations arguments");
+        }
+        const { query, count = 10, timeout = 300 } = args as LinkedinSearchLocationsArgs;
+        const requestData = { timeout, query, count };
+        log(`Starting LinkedIn locations search for: ${query}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_LOCATIONS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn locations search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn locations search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_linkedin_industries": {
+        if (!isValidLinkedinSearchIndustriesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search industries arguments");
+        }
+        const { query, count = 10, timeout = 300 } = args as LinkedinSearchIndustriesArgs;
+        const requestData = { timeout, query, count };
+        log(`Starting LinkedIn industries search for: ${query}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_INDUSTRIES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn industries search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn industries search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_linkedin_jobs": {
+        if (!isValidLinkedinSearchJobsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search jobs arguments");
+        }
+        const { keywords, location, sort, experience_level, job_types, work_types, industry, company, count, timeout = 300 } = args as LinkedinSearchJobsArgs;
+        const requestData: any = { timeout, count };
+        if (keywords) requestData.keywords = keywords;
+        if (location) requestData.location = location;
+        if (sort) requestData.sort = sort;
+        if (experience_level) requestData.experience_level = experience_level;
+        if (job_types) requestData.job_types = job_types;
+        if (work_types) requestData.work_types = work_types;
+        if (industry) requestData.industry = industry;
+        if (company) requestData.company = company;
+        log(`Starting LinkedIn jobs search with filters`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_JOBS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn jobs search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn jobs search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "search_linkedin_companies": {
+        if (!isValidLinkedinSearchCompaniesArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn search companies arguments");
+        }
+        const { keywords, count, timeout = 300 } = args as LinkedinSearchCompaniesArgs;
+        const requestData: any = { timeout, count };
+        if (keywords) requestData.keywords = keywords;
+        log(`Starting LinkedIn companies search`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_SEARCH_COMPANIES, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn companies search error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn companies search API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_company_employee_stats": {
+        if (!isValidLinkedinCompanyEmployeeStatsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn company employee stats arguments");
+        }
+        const { company, timeout = 300 } = args as LinkedinCompanyEmployeeStatsArgs;
+        const requestData = { timeout, company };
+        log(`Starting LinkedIn company employee stats lookup for: ${company}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_COMPANY_EMPLOYEE_STATS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn company employee stats lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn company employee stats API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_management_company_mentions": {
+        if (!isValidLinkedinManagementCompanyMentionsArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn company mentions arguments");
+        }
+        const { company, count = 10, timeout = 300 } = args as LinkedinManagementCompanyMentionsArgs;
+        const requestData: any = { timeout, company, count, account_id: ACCOUNT_ID };
+        log(`Starting LinkedIn company mentions lookup for: ${company}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_COMPANY_MENTIONS, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn company mentions lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn company mentions API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_chat_attachment_base64": {
+        if (!isValidLinkedinManagementChatAttachmentBase64Args(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn chat attachment arguments");
+        }
+        const { attachment_url, timeout = 300 } = args as LinkedinManagementChatAttachmentBase64Args;
+        const requestData: any = { timeout, attachment_url, account_id: ACCOUNT_ID };
+        log(`Starting LinkedIn chat attachment download for: ${attachment_url}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_MANAGEMENT_CHAT_ATTACHMENT_BASE64, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn chat attachment download error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn chat attachment API error: ${formatError(error)}` }], isError: true };
+        }
+      }
+
+      case "get_linkedin_group": {
+        if (!isValidLinkedinGroupArgs(args)) {
+          throw new McpError(ErrorCode.InvalidParams, "Invalid LinkedIn group arguments");
+        }
+        const { group, timeout = 300 } = args as LinkedinGroupArgs;
+        const requestData = { timeout, group };
+        log(`Starting LinkedIn group lookup for: ${group}`);
+        try {
+          const response = await makeRequest(API_CONFIG.ENDPOINTS.LINKEDIN_GROUP, requestData);
+          return { content: [{ type: "text", mimeType: "application/json", text: JSON.stringify(response, null, 2) }] };
+        } catch (error) {
+          log("LinkedIn group lookup error:", error);
+          return { content: [{ type: "text", mimeType: "text/plain", text: `LinkedIn group API error: ${formatError(error)}` }], isError: true };
         }
       }
 
