@@ -1574,8 +1574,8 @@ const server = new Server(
   { name: "anysite-mcp", version: "1.0.0" },
   {
     capabilities: {
-      resources: { supportedTypes: ["application/json", "text/plain"] },
-      tools: { linkedin: { description: "LinkedIn data access functionality" } }
+      resources: {},
+      tools: {}
     }
   }
 );
