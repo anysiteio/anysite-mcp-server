@@ -1,7 +1,7 @@
 {
   "name": "@anysiteio/mcp",
-  "version": "1.0.0",
-  "description": "A comprehensive MCP server with 69+ tools for LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo, and web scraping via AnySite API",
+  "version": "2.0.0",
+  "description": "MCP server for AnySite — five meta-tools (discover / execute / get_page / query_cache / export_data) over 30+ data sources including LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo and a universal web scraper.",
   "private": false,
   "type": "module",
   "module": "src/index.ts",
@@ -55,7 +55,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/horizondatawave/hdw-mcp-server.git"
+    "url": "git+https://github.com/anysiteio/anysite-mcp-server.git"
   },
   "homepage": "https://anysite.io",
   "author": "AnySite"
