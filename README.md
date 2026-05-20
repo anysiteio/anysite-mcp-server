@@ -181,6 +181,35 @@ The agent figures out the parameter names on its own from `discover`.
 
 ---
 
+## Skills — ready-made workflows
+
+The MCP server gives raw access. **Anysite Skills** package that access into named workflows you summon by topic, so the assistant runs a proven pattern instead of improvising. Built for Claude Code (also works in Cursor / Windsurf via the same plugin format).
+
+| Workflow | What you say | What it does |
+|---|---|---|
+| **Lead generation** | "Find me 50 marketing directors at Series A SaaS in Berlin and enrich with email" | LinkedIn search → enrichment → CSV |
+| **Competitor intelligence** | "Track @competitor across LinkedIn hires, social, YC, and recent posts" | Multi-source intel + hiring velocity + sentiment |
+| **Person analyzer** | "Deep-dive on this LinkedIn profile before our partnership call" | LinkedIn + Twitter + Reddit + GitHub + web → strategic brief |
+| **Market research** | "Map the AI legal-tech landscape — startups, funding, momentum" | YC + Crunchbase + SEC + Reddit + Twitter sentiment |
+| **Customer pain mining** | "Pull verbatim complaints about Salesforce from Reddit and Twitter" | Pain clusters + exact quotes + white-space gaps |
+| **Brand reputation** | "What is the conversation around our brand this week?" | Cross-platform mention scan with sentiment scoring |
+| **Positioning map** | "Plot 3-5 competitors on a positioning map, find the empty quadrant" | Five-axis comparison + positioning statement |
+
+Full catalog (17 skills, including VC analyst, influencer discovery, audience analysis, content analytics, trend analysis): [github.com/anysiteio/agent-skills](https://github.com/anysiteio/agent-skills).
+
+### Install
+
+In Claude Code:
+
+```bash
+/plugin marketplace add https://github.com/anysiteio/agent-skills
+/plugin install anysite-lead-generation@anysite-skills
+```
+
+You can install one skill or the whole marketplace. The MCP server connection above is the only prerequisite.
+
+---
+
 ## Local development
 
 ```bash
