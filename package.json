@@ -1,14 +1,18 @@
 {
   "name": "@anysiteio/mcp",
-  "version": "2.0.0",
-  "description": "MCP server for AnySite — five meta-tools (discover / execute / get_page / query_cache / export_data) over 30+ data sources including LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Y Combinator, DuckDuckGo and a universal web scraper.",
+  "version": "3.0.0",
+  "description": "Local stdio bridge to the AnySite remote MCP server (mcp.anysite.io) — structured data from LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Crunchbase and hundreds of other sources via discover / execute / get_page / query_cache / export_data plus CRM tools.",
   "private": false,
   "type": "module",
   "module": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    }
+  },
   "bin": {
-    "anysite-mcp": "build/server.js",
-    "anysite": "build/server.js",
-    "mcp": "build/server.js"
+    "anysite-mcp": "build/server.js"
   },
   "files": [
     "build",
@@ -23,7 +27,7 @@
     "inspector": "npx @modelcontextprotocol/inspector build/server.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.3",
+    "@modelcontextprotocol/sdk": "^1.25.1",
     "dotenv": "^16.4.7",
     "zod": "^3.25.46"
   },
@@ -43,15 +47,17 @@
     "sec",
     "yc",
     "y-combinator",
+    "crunchbase",
     "duckduckgo",
     "web-scraping",
     "anysite",
+    "crm",
     "ai-agent",
     "model-context-protocol"
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "repository": {
     "type": "git",

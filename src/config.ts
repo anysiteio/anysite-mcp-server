@@ -1,17 +1,14 @@
-export const API_BASE_URL = process.env.ANYSITE_API_URL ?? "https://api.anysite.io";
-export const OPENAPI_SPEC_URL =
-  process.env.ANYSITE_OPENAPI_URL ?? `${API_BASE_URL}/openapi.json`;
+export const VERSION = "3.0.0";
 
-export const DEFAULT_PAGE_SIZE = 10;
-export const MAX_PAGE_SIZE = 50;
-export const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-export const CACHE_MAX_ENTRIES = 256;
+export const DEFAULT_MCP_URL = "https://mcp.anysite.io/mcp";
+
+export function getMcpUrl(): string {
+  return process.env.ANYSITE_MCP_URL ?? DEFAULT_MCP_URL;
+}
+
+export const CONNECT_TIMEOUT_MS = 10_000;
 export const REQUEST_TIMEOUT_MS = 600_000;
-
-export const EXCLUDED_PATH_PATTERNS: RegExp[] = [
-  /^\/api\/linkedin\/management\//,
-  /^\/token\//,
-];
-
-export const EXCLUDED_PARAMS = new Set(["timeout"]);
-export const EXCLUDED_RESPONSE_FIELDS = new Set(["@type"]);
+export const TOOLS_CACHE_TTL_MS = 60_000;
+// Test-only override; read from the real process environment only (evaluated before dotenv).
+export const TOOLS_POLL_INTERVAL_MS = Number(process.env.ANYSITE_POLL_INTERVAL_MS ?? "") || 60_000;
+export const CONNECT_ATTEMPTS = 2;

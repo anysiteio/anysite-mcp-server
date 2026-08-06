@@ -6,7 +6,7 @@
 
 **The entire web is your database. Your AI assistant is the query interface.**
 
-A Model Context Protocol server that lets Claude, Cursor, ChatGPT, and any MCP client query structured data from LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC EDGAR, Y Combinator, Crunchbase, and any URL on the web — through five universal tools.
+A Model Context Protocol server that lets Claude, Cursor, ChatGPT, and any MCP client query structured data from LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC EDGAR, Y Combinator, Crunchbase, and any URL on the web — through five universal tools, plus CRM write-back tools.
 
 [![npm version](https://img.shields.io/npm/v/@anysiteio/mcp.svg)](https://www.npmjs.com/package/@anysiteio/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -18,11 +18,9 @@ A Model Context Protocol server that lets Claude, Cursor, ChatGPT, and any MCP c
 
 ## Quick start
 
-Two ways to connect. **Remote MCP** is the recommended path for everyday use — managed cache, OAuth, no infrastructure. **Self-hosted** is for development or when you want the server running locally over stdio.
+Connect directly to the hosted server at `https://mcp.anysite.io/mcp`. It speaks MCP over Streamable HTTP with OAuth 2.0, and works with Claude Desktop, Claude Code, Cursor, Cline, Windsurf, ChatGPT, and any MCP-compliant client.
 
-### Option 1: Remote MCP with OAuth (recommended)
-
-Hosted at `https://mcp.anysite.io/mcp`. Works with Claude Desktop, Claude Code, Cursor, Cline, Windsurf, ChatGPT, and any MCP-compliant client.
+> **If your client supports HTTP transport, you do not need this npm package.** The package exists as a [stdio bridge](#stdio-bridge-npm-package) for clients that only speak stdio.
 
 #### Step 1: Sign up
 
@@ -75,7 +73,7 @@ Edit `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` in the project root:
 <details>
 <summary><b>Cline, Windsurf, ChatGPT, any MCP client</b></summary>
 
-Anysite implements MCP 1.0 over Streamable HTTP with OAuth 2.0. Point any compliant client at `https://mcp.anysite.io/mcp` and authenticate via OAuth or `?api_key=YOUR_KEY`.
+Point any compliant client at `https://mcp.anysite.io/mcp` and authenticate via OAuth or `?api_key=YOUR_KEY`.
 
 </details>
 
@@ -87,7 +85,7 @@ Ask the assistant:
 What MCP tools do you have from anysite?
 ```
 
-It should list exactly: `discover`, `execute`, `get_page`, `query_cache`, `export_data`.
+It should list: `discover`, `execute`, `get_page`, `query_cache`, `export_data` — plus eight `crm_*` tools if the CRM integration is enabled on your account.
 
 #### Step 4: Run a query
 
@@ -100,9 +98,11 @@ The assistant runs `discover` on LinkedIn, picks the right search endpoint, call
 
 ---
 
-### Option 2: Self-hosted (npm, stdio)
+## stdio bridge (npm package)
 
-For local development, custom integrations, or when you want the server in-process. Distributed as `@anysiteio/mcp` on npm. Runs over stdio; cache lives in-process for 7 days.
+`@anysiteio/mcp` is a thin local proxy: it runs on stdio and forwards every request to `https://mcp.anysite.io/mcp` over Streamable HTTP with your token. No business logic lives in the package — tools, instructions, caching and exports all come from the server, so new endpoints and tools appear without a package update.
+
+Use it when your client cannot speak HTTP transport: stdio-only IDE plugins, older Cline/Continue builds, custom stdio runners, or environments where outbound HTTP must go through a managed local process.
 
 #### Install
 
@@ -128,29 +128,24 @@ Or run on demand with `npx -y @anysiteio/mcp`.
 }
 ```
 
-That is the entire configuration. Only `ANYSITE_ACCESS_TOKEN` is required — create one at [app.anysite.io](https://app.anysite.io).
+That is the entire configuration. Only `ANYSITE_ACCESS_TOKEN` is required — create one at [app.anysite.io](https://app.anysite.io). The token can also live in `~/.anysite-mcp.env`.
 
 ---
 
-## What's new in 2.0
-
-The server no longer ships 60+ individual tools. Instead, it exposes **five universal meta-tools** and discovers the underlying endpoints dynamically from the AnySite OpenAPI spec. This means:
-
-- Every new endpoint added to the AnySite API is available the next time the server starts — no package update required.
-- The agent learns the surface through `discover(source, category)` rather than from a static tool catalog.
-- Pagination, filtering and exports are handled in-process via the cache: one `execute()` call, then unlimited `get_page` / `query_cache` / `export_data` calls without re-paying API credits.
-
-### The five tools
+## The tools
 
 | Tool | Purpose |
 |---|---|
 | `discover(source, category)` | List endpoints in a category with their params and LLM hints. Always call before `execute`. |
 | `execute(source, category, endpoint, params)` | Fetch data. Returns first 10 items + `cache_key`. |
-| `get_page(cache_key, offset, limit)` | Paginate cached items without re-fetching. |
-| `query_cache(cache_key, conditions?, sort_by?, aggregate?, group_by?)` | Filter / sort / aggregate cached items locally. |
-| `export_data(cache_key, format)` | Dump the full dataset to `json` / `jsonl` / `csv`. Returns a local file path. |
+| `get_page(cache_key, offset, limit)` | Paginate cached items without re-fetching (limit ≤ 50). |
+| `query_cache(cache_key, conditions?, sort_by?, aggregate?, group_by?)` | Filter / sort / aggregate cached items server-side. |
+| `export_data(cache_key, output_format, list_unpack?)` | Dump the full dataset to `json` / `jsonl` / `csv`. Returns a download URL. |
+| `crm_*` (8 tools) | HubSpot-and-friends read/write: connections, schema, upsert contacts/companies, query, undo. Visible only when CRM is enabled for your account. |
 
-Sources surfaced through `discover`: LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC EDGAR, Y Combinator, Crunchbase, DuckDuckGo, the universal web parser, plus AI parsers for GitHub, Amazon, Google Maps, G2, BuiltWith, Apify, GLEIF, Newegg and more. New endpoints appear automatically as soon as they ship on the platform — no package update required.
+Sources surfaced through `discover`: LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC EDGAR, Y Combinator, Crunchbase, DuckDuckGo, the universal web parser, plus AI parsers for GitHub, Amazon, Google Maps, G2, BuiltWith, Apify, GLEIF, Newegg and more. New endpoints appear automatically as soon as they ship on the platform.
+
+Data fetched by `execute` is cached server-side for 7 days: one `execute()` call, then unlimited `get_page` / `query_cache` / `export_data` calls without re-paying API credits. Export files live for 24 hours (regenerated on demand while the cache entry is alive).
 
 ---
 
@@ -165,19 +160,27 @@ execute("linkedin", "search", "users", { keywords: "CTO AI" })
 
 get_page("abc...", offset=10)            # next page, free
 query_cache("abc...", { conditions: [{ field: "location", op: "contains", value: "San Francisco" }] })
-export_data("abc...", "csv")             # dump everything to a CSV file
-```
-
-### Example: find decision makers and export to CSV
-
-```
-1. discover("linkedin", "search")
-2. execute("linkedin", "search", "users", { keywords: "CTO", company_keywords: "AI" })
-3. query_cache(cache_key, { conditions: [{ field: "location", op: "contains", value: "Berlin" }] })
-4. export_data(cache_key, "csv")
+export_data("abc...", "csv")             # full dataset as a CSV download URL
 ```
 
 The agent figures out the parameter names on its own from `discover`.
+
+---
+
+## Migrating from 2.x
+
+v3 is a breaking change: the package no longer reimplements the server locally — it proxies the hosted MCP server. What changes for you:
+
+- **`export_data` returns a download URL** (`https://mcp.anysite.io/exports/…`) instead of a local file path. The `file_path` field is gone; agents that read the exported file from disk must download it instead. The URL is accessible without a token (the file name is unguessable) and lives for 24 hours — do not share the link if the data is sensitive.
+- **`export_data` parameter is `output_format`.** The old `format` name is transparently rewritten by the bridge for backward compatibility, but new prompts should use `output_format`.
+- **`get_page` caps `limit` at 50** (server-side page size limit).
+- **Cache is server-side now** (7-day TTL, survives restarts, shared across your sessions) instead of in-process.
+- **CRM tools appear** (8 `crm_*` tools) when the CRM integration is enabled on your account.
+- **Env vars `ANYSITE_API_URL` and `ANYSITE_OPENAPI_URL` are removed** — the bridge talks to the MCP server, not the raw API. Use `ANYSITE_MCP_URL` to point at a different MCP server.
+- **`bin` aliases `anysite` and `mcp` are removed** — the command is `anysite-mcp`.
+- Two LinkedIn endpoints that were reachable in 2.x (`sn_search/users`, `company/employees`) are excluded by server policy.
+- Tool results no longer carry a `mimeType` on content items — the server defines the response shape.
+- Cancelling a long `tools/call` stops the client-side wait, but the server keeps processing the request (stateless transport cannot deliver the cancellation) — the work is still billed.
 
 ---
 
@@ -233,8 +236,11 @@ npm run inspector
 | Env var | Required | Default | Notes |
 |---|---|---|---|
 | `ANYSITE_ACCESS_TOKEN` | yes | — | Create one at [app.anysite.io](https://app.anysite.io) |
-| `ANYSITE_API_URL` | no | `https://api.anysite.io` | Override the API base |
-| `ANYSITE_OPENAPI_URL` | no | `https://api.anysite.io/openapi.json` | Override the spec URL |
+| `ANYSITE_MCP_URL` | no | `https://mcp.anysite.io/mcp` | Override the remote MCP server URL |
+
+Variables can also live in `./.env` or `~/.anysite-mcp.env` (real environment variables and `./.env` take precedence over `~/.anysite-mcp.env`).
+
+If the remote server is unreachable at startup, the bridge still starts in a degraded mode (empty tool list, descriptive errors on calls), keeps reconnecting in the background, and announces the tool list via `tools/list_changed` once the server is reachable again.
 
 ---
 
@@ -242,19 +248,11 @@ npm run inspector
 
 ```
 src/
-├── server.ts          stdio entry (CLI bin)
-├── index.ts           Smithery TypeScript runtime adapter
-├── loader.ts          fetches and parses the OpenAPI spec
-├── registry.ts        in-memory source/category/endpoint registry
-├── client.ts          HTTP client with retry/timeout
-├── cache.ts           cache_key → items
-├── query.ts           in-memory filter / sort / aggregate
-├── export.ts          json / jsonl / csv writers
-├── tools.ts           the five meta-tool handlers
-├── tool-schemas.ts    MCP tool input schemas (zod + JSON Schema)
-├── instructions.ts    instructions text for the LLM
-├── config.ts          env-derived constants
-└── types.ts           shared types
+├── server.ts   stdio entry (CLI bin): env handling, connect with retries, degraded mode
+├── proxy.ts    the bridge: remote client, generic request forwarding, tools/list cache,
+│               format→output_format shim, error mapping, background list refresh
+├── index.ts    Smithery TypeScript runtime adapter
+└── config.ts   env-derived constants
 ```
 
 ---
