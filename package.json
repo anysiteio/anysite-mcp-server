@@ -1,0 +1,68 @@
+{
+  "name": "@anysiteio/mcp",
+  "version": "3.0.0",
+  "description": "Local stdio bridge to the AnySite remote MCP server (mcp.anysite.io) — structured data from LinkedIn, Instagram, Twitter/X, Reddit, YouTube, SEC, Crunchbase and hundreds of other sources via discover / execute / get_page / query_cache / export_data plus CRM tools.",
+  "private": false,
+  "type": "module",
+  "module": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    }
+  },
+  "bin": {
+    "anysite-mcp": "build/server.js"
+  },
+  "files": [
+    "build",
+    "icon.png"
+  ],
+  "scripts": {
+    "build": "npx smithery build",
+    "dev": "npx smithery dev",
+    "build:tsc": "tsc && chmod +x build/server.js",
+    "prepare": "npm run build:tsc",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector build/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1",
+    "dotenv": "^16.4.7",
+    "zod": "^3.25.46"
+  },
+  "devDependencies": {
+    "@smithery/cli": "^1.4.6",
+    "@types/node": "^20.17.23",
+    "typescript": "^5.8.2"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "linkedin",
+    "instagram",
+    "twitter",
+    "reddit",
+    "youtube",
+    "sec",
+    "yc",
+    "y-combinator",
+    "crunchbase",
+    "duckduckgo",
+    "web-scraping",
+    "anysite",
+    "crm",
+    "ai-agent",
+    "model-context-protocol"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anysiteio/anysite-mcp-server.git"
+  },
+  "homepage": "https://anysite.io",
+  "author": "AnySite"
+}

@@ -1,0 +1,8 @@
+/node_modules/
+/build/
+.idea/
+.cursor/
+/my/
+/CLAUDE.md
+.env
+.DS_Store
